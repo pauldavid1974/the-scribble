@@ -40,7 +40,7 @@ COMPONENTS={
 # Align center to Eagle PCB centroid and put lower-most electronics at z=1.9.
 TRANSFORMS={
  "crowpanel":[1,0,0, 0,
-              0,0,-1,-1.36215,
+              0,0,-1,5.63785,
               0,1,0,16.952],
  # Adafruit cell actual axes: 36 along X, 29 along Y; rotate 90 degrees.
  "battery":[0,1,0,-14.5,
@@ -166,10 +166,10 @@ def main():
     if writer.Write(str(dest))!=IFSelect_RetDone:
         raise SystemExit("FAILED to save STEP assembly")
     report={
-      "status":"V7 INTERNAL SOURCE-CAD TRIAL — DATUM AND CASE CLEARANCES NEED VERIFICATION",
+      "status":"V8 DIRECT-ACCESS ROTARY SOURCE-CAD TRIAL — DATUM AND CASE CLEARANCES NEED VERIFICATION",
       "source":"real imported vendor STEP B-reps; no scaled proxy geometry",
       "models":poses,"pairwise_intersections":checks,
-      "board_registration":"rotation/translation hypothesized from Elecrow STEP bounds and Eagle locations, not validated by registration of specific CAD landmarks",
+      "board_registration":"7mm+Y reposition for rotary access, rotation/translation hypothesized from Elecrow STEP bounds and Eagle locations, not validated by registration of specific CAD landmarks",
       "motor":"LCM1027A2445F includes tabs/wires; full imported geometry, not nominal 10mm cylinder",
       "microphone":"paulrenzi STEP exact nominal 16 x 14 x 2.02mm match; unconfirmed vendor SKU",
       "driver":"real SOT23 and SOD323 package STEP only, not verified complete driver PCB",
