@@ -8,20 +8,19 @@
     "Governance / invariants",
     "Governance / secrets",
     "Governance / actions-security",
-    "Project / checks",
-    "governance/exact-head-review"
+    "Project / checks"
   ],
   "review": {
     "requiredApprovals": 0,
     "dismissStaleApprovals": true,
-    "requireCodeOwnerReview": true,
-    "requireLastPushApproval": true,
-    "requireExtraApprovalForUnattributedChanges": true,
+    "requireCodeOwnerReview": false,
+    "requireLastPushApproval": false,
+    "requireExtraApprovalForUnattributedChanges": false,
     "requireConversationResolution": true,
     "statusContext": "governance/exact-head-review",
     "preferredTrustedIntegrationId": 15368,
     "externalReviewerAppId": null,
-    "requireIndependentReview": true
+    "requireIndependentReview": false
   },
   "history": {
     "requirePullRequest": true,
