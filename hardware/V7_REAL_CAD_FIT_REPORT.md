@@ -19,7 +19,7 @@
 
 ## Verification evidence (October 16, 2026)
 **Native B-rep assembly, zero substitutes:**
-- Remote GitHub Actions run: https://github.com/pauldavid1974/the-scribble/actions/runs/38950129792
+- Remote GitHub Actions run: https://github.com/pauldavid1974/the-scribble/actions/runs/38950913393
 - Source-cad loader: `hardware/audit_source_step.py`; assembly/intersections: `hardware/assemble_real_step.py`.
 - Entire actual CrowPanel assembly, cell, chosen INMP441, motor, SOT23 and diode imported successfully.
 - **Every native model pair in the revised v7 assembly has zero intersecting AABB volume** (conservative geometrical proof that their solids cannot overlap). The earlier v6 actual B-rep test had board/cell **110.546 mm³** and battery/motor **1.374 mm³** interferences; these are resolved by the revised positions.
@@ -34,3 +34,10 @@
 5. For final manufacturing signoff, run exhaustive case-to-parts surface/volume interference or actual printed assembly test. Exact electrical connector selection is **out of scope for the enclosure packaging gate** per owner's instruction.
 
 Do not interpret a GitHub CI pass or the old v6 viewer as a physical fit certificate. Use the **native STEP assembly** from the workflow artifact or download package for genuine source-CAD inspection.
+
+### Final exact-revision CI result
+
+- **GitHub workflow run 38950913393: PASS.** OpenCascade imported actual source STEP solids, assembled the revised real-part model, and reported zero pairwise intersections by proven disjoint 3D solid bounds.
+- Authoritative OpenSCAD rendering on the GitHub runner: `rear` = 1 watertight body, `bezel` = 1 watertight body, `side_caps` = 3 independently watertight pieces, `print_layout` = 2 watertight print-placement bodies. All STL meshes generated directly from `hardware/the_scribble_v7_real_fit.scad` on the reviewed branch; no viewer export masquerades as print CAD.
+- Download native STEP, original vendor STEP files, and printable STLs as the three artifacts attached to [this successful run](https://github.com/pauldavid1974/the-scribble/actions/runs/38950913393).
+- The **physical print, actual controller button travel, audio-path alignment, complete driver circuit board, and exhaustive case-solid-to-STEP Booleans remain unverified**. This is a valid digital prototype, not a certified production enclosure.
