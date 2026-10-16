@@ -6,15 +6,16 @@ set -eu
 echo "==> Running project checks for The Scribble..."
 
 PYTHON_BIN=""
-if command -v python3 >/dev/null 2>&1; then
-  PYTHON_BIN="python3"
-elif command -v python >/dev/null 2>&1; then
-  PYTHON_BIN="python"
-elif command -v py >/dev/null 2>&1; then
-  PYTHON_BIN="py"
-fi
+for cmd in python py python3; do
+  if command -v "$cmd" >/dev/null 2>&1; then
+    if "$cmd" -c "import sys" >/dev/null 2>&1; then
+      PYTHON_BIN="$cmd"
+      break
+    fi
+  fi
+done
 
-# 1. Validate Python scripts syntax if python runtime is found
+# 1. Validate Python scripts syntax if a working python runtime is found
 if [ -n "$PYTHON_BIN" ]; then
   for pyfile in scripts/*.py tools/*.py; do
     if [ -f "$pyfile" ]; then
@@ -23,7 +24,7 @@ if [ -n "$PYTHON_BIN" ]; then
     fi
   done
 else
-  echo "  [SKIP] Python interpreter not detected in PATH; skipping py_compile."
+  echo "  [SKIP] Working Python interpreter not detected; skipping py_compile."
 fi
 
 # 2. Verify mechanical CAD artifacts
