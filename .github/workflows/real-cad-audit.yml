@@ -33,7 +33,7 @@ jobs:
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y --no-install-recommends openscad
-          python3 -m pip install --disable-pip-version-check 'trimesh>=4,<5'
+          python3 -m pip install --disable-pip-version-check 'trimesh>=4,<5' 'networkx>=3,<4'
       - name: Render and inspect authoritative v7 case solids
         run: |
           for part in rear bezel side_caps print_layout; do
