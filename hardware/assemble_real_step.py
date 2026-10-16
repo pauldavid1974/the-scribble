@@ -41,11 +41,11 @@ COMPONENTS={
 TRANSFORMS={
  "crowpanel":[1,0,0, 0,
               0,0,-1,-1.36215,
-              0,1,0,11.652],
+              0,1,0,16.952],
  # Adafruit cell actual axes: 36 along X, 29 along Y; rotate 90 degrees.
  "battery":[0,1,0,-14.5,
-            -1,0,0,13.0,
-            0,0,1,2.05],
+            -1,0,0,15.5,
+            0,0,1,1.85],
  # Actual 16 x 14 x 2.02mm third-party mic: thickness axis source Y.
  "microphone":[1,0,0,-543.8,
                0,0,1,17.5,
@@ -166,7 +166,7 @@ def main():
     if writer.Write(str(dest))!=IFSelect_RetDone:
         raise SystemExit("FAILED to save STEP assembly")
     report={
-      "status":"ASSEMBLY TRIAL ONLY — DATUM POSITIONS NEED CONFIRMATION",
+      "status":"V7 INTERNAL SOURCE-CAD TRIAL — DATUM AND CASE CLEARANCES NEED VERIFICATION",
       "source":"real imported vendor STEP B-reps; no scaled proxy geometry",
       "models":poses,"pairwise_intersections":checks,
       "board_registration":"rotation/translation hypothesized from Elecrow STEP bounds and Eagle locations, not validated by registration of specific CAD landmarks",
@@ -174,7 +174,7 @@ def main():
       "microphone":"paulrenzi STEP exact nominal 16 x 14 x 2.02mm match; unconfirmed vendor SKU",
       "driver":"real SOT23 and SOD323 package STEP only, not verified complete driver PCB",
       "battery_connector":"ignored for enclosure packaging by owner instruction",
-      "enclosure_collision":"NOT YET CHECKED — STEP assembly must be intersected with authoritative CSG case",
+      "enclosure_collision":"NOT YET VERIFIED — native component pair tests do not prove collision-free CSG case",
       "file":dest.name,
     }
     (out/"real_assembly_report.json").write_text(json.dumps(report,indent=2)+"\n")
