@@ -26,3 +26,15 @@ jobs:
         run: |
           python3 hardware/audit_source_step.py
           cat output/cad-source-audit.json
+      - name: Assemble imported STEP solids and run true B-rep interference checks
+        timeout-minutes: 10
+        run: python3 hardware/assemble_real_step.py
+      - name: Save actual assembly STEP and reports
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: scribble-vendor-step-assembly
+          path: |
+            output/*.step
+            output/*.json
+          retention-days: 7
