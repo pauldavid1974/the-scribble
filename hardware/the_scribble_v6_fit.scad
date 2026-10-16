@@ -59,8 +59,10 @@ module acoustic_seal_seat(){
 module motor_holder(){
     translate([motor_xy[0],motor_xy[1],floor_t-0.2])
       difference(){
-        cylinder(d=12.2,h=2.5);
-        translate([0,0,-0.1]) cylinder(d=10.4,h=2.7);
+        // Refit to the actual LCM1027A2445F STEP: >10.8mm across external features.
+        // 11.6mm opening; thickened rim prevents printing a fragile thin ring.
+        cylinder(d=13.8,h=2.5);
+        translate([0,0,-0.1]) cylinder(d=11.6,h=2.7);
         // Wire exit for LEADER LCM1027A2445F leaded motor.
         translate([4.7,-2.0,-0.1]) cube([4,4,2.7]);
       }
