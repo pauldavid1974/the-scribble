@@ -20,6 +20,8 @@ from OCP.BRep import BRep_Builder
 from OCP.TopoDS import TopoDS_Compound
 from OCP.GProp import GProp_GProps
 from OCP.BRepGProp import BRepGProp
+from OCP.TopExp import TopExp_Explorer
+from OCP.TopAbs import TopAbs_SOLID
 
 ROOT=Path(__file__).resolve().parents[1]
 MODEL=ROOT/"hardware/models"
@@ -89,15 +91,38 @@ def bounding_overlap(a,b):
     bounds_a,bounds_b=bounds(a),bounds(b)
     return all(min(aa[1],bb[1])-max(aa[0],bb[0]) > 0.001 for aa,bb in zip(bounds_a,bounds_b))
 
+def solids(shape):
+    explorer=TopExp_Explorer(shape,TopAbs_SOLID)
+    found=False
+    while explorer.More():
+        found=True
+        yield explorer.Current()
+        explorer.Next()
+    if not found:
+        yield shape
+
 def exact_intersection_volume(a,b):
-    # Exact OpenCascade B-rep boolean: not mesh triangles, not proxy AABBs.
-    operation=BRepAlgoAPI_Common(a,b)
-    operation.SetRunParallel(False)
-    operation.Build()
-    if not operation.IsDone():raise RuntimeError("OpenCascade BRep Common failed")
-    props=GProp_GProps()
-    BRepGProp.VolumeProperties_s(operation.Shape(),props)
-    return round(abs(props.Mass()),5)
+    # Narrow-phase BRep Booleans on real individual vendor solids. Performing
+    # an entire 240-body CrowPanel vs. cell in one operation can stall OCC.
+    left=list(solids(a))
+    right=list(solids(b))
+    amount=0.0
+    tested=0
+    for one in left:
+        for two in right:
+            if not bounding_overlap(one,two):
+                continue
+            tested+=1
+            operation=BRepAlgoAPI_Common(one,two)
+            operation.SetRunParallel(False)
+            operation.Build()
+            if not operation.IsDone():
+                raise RuntimeError("OpenCascade BRep Common failed")
+            props=GProp_GProps()
+            BRepGProp.VolumeProperties_s(operation.Shape(),props)
+            amount+=abs(props.Mass())
+    print("NARROW_PHASE",len(left),len(right),"candidate_pairs",tested,flush=True)
+    return round(amount,5)
 
 def main():
     out=ROOT/"output"
