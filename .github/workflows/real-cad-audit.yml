@@ -1,0 +1,82 @@
+name: Real CAD Source Audit
+
+on:
+  pull_request:
+    paths:
+      - 'hardware/**'
+      - '.github/workflows/real-cad-audit.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source-step:
+    name: Real STEP geometry audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out exact pull request revision
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Install STEP geometry kernel
+        run: python3 -m pip install --disable-pip-version-check 'cadquery-ocp>=7.8,<7.10'
+      - name: Import actual STEP files, inspect B-rep and report missing sources
+        run: |
+          python3 hardware/audit_source_step.py
+          cat output/cad-source-audit.json
+      - name: Assemble imported STEP solids and run true B-rep interference checks
+        timeout-minutes: 10
+        run: python3 hardware/assemble_real_step.py
+      - name: Install OpenSCAD and triangulated-mesh validator
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends openscad
+          python3 -m pip install --disable-pip-version-check 'trimesh>=4,<5' 'networkx>=3,<4'
+      - name: Render and inspect authoritative v8 case solids
+        run: |
+          for part in rear bezel side_caps print_layout; do
+            openscad -o "output/the_scribble_v8_${part}.stl" -D "part=\"$part\"" hardware/the_scribble_v8_rotary_fit.scad
+          done
+          python3 - <<'PY'
+          from pathlib import Path
+          import trimesh
+          for part, expected in [('rear',1),('bezel',1),('side_caps',2),('print_layout',2)]:
+              f=Path(f'output/the_scribble_v8_{part}.stl')
+              m=trimesh.load(str(f), force='mesh')
+              comps=m.split()
+              print('SLICER',part,'watertight',m.is_watertight,'parts',len(comps),'bounds',m.bounds.tolist())
+              assert m.is_watertight and len(comps)==expected, part
+          PY
+      - name: Check real rotary wheel and pushbutton fit against case triangles
+        run: python3 hardware/verify_rotary_clearance.py
+      - name: Save printable v8 mesh files
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: scribble-v8-printable-meshes
+          path: output/the_scribble_v8_*.stl
+          retention-days: 7
+      - name: Save actual assembly STEP and reports
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: scribble-vendor-step-assembly
+          path: |
+            output/*.step
+            output/*.json
+          retention-days: 7
+      - name: Preserve exact imported vendor CAD for off-runner validation
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: scribble-source-step-models
+          path: |
+            hardware/specs/00-2-13_view_asm.stp
+            hardware/models/adafruit_1578_500mAh_battery.step
+            hardware/models/paulrenzi__bought_inmp441.step
+            hardware/models/LCM1027A2445F_1027_coin_vibration_motor.step
+            hardware/models/SOT-23.step
+            hardware/models/D_SOD-323.step
+          retention-days: 7

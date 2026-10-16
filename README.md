@@ -1,10 +1,25 @@
 # The Scribble
 
+> **Enclosure status (2026-10-16):** **v8** is the active unmerged fit prototype in [PR #3](https://github.com/pauldavid1974/the-scribble/pull/3). It fixes the genuine CrowPanel **TM_2024A rotary wheel**, which v7 incorrectly replaced with a sliding piece. The board is repositioned +7 mm toward the top short edge, with a rounded, beveled end-slot that keeps the PCB covered, plus two independent pushbutton plungers. Open the **[v8 interactive source-CAD phone viewer](hardware/case_model_viewer.html)** and the [rotary CAD audit](hardware/V8_ROTARY_CLEARANCE_AUDIT.md). Static CAD clearance is promising but rotary motion, click travel, hand ergonomics and physical print remain **unverified**.
+
 > **Distraction-Free Voice-to-Text E-Paper Handheld Recorder**
 
 The Scribble is an open hardware, pocketable voice note capture device designed for immediate, tactile thought capture. It pairs an ultra-low-power 2.13" E-Paper display with an ESP32-S3 microcontroller, I2S digital MEMS microphone, haptic vibration engine, and rechargeable LiPo battery inside a custom 3D printed snap-fit enclosure.
 
 Spoken thoughts are captured to internal flash memory as clean Markdown (`.md`) files and synced to a Windows PC over standard USB-C.
+
+---
+
+
+## Current v8 rotary-access prototype
+
+The active printable source is [`hardware/the_scribble_v8_rotary_fit.scad`](hardware/the_scribble_v8_rotary_fit.scad); [`hardware/case_model_viewer.html`](hardware/case_model_viewer.html) now previews the **actual source STEP-derived rotary wheel** separately, with an **Inspect wheel** control. The 7 mm board shift, 14.2 × 3.9 mm rounded wheel-access edge slot, updated display window and true pushbutton tips are documented in [`hardware/V8_ROTARY_CLEARANCE_AUDIT.md`](hardware/V8_ROTARY_CLEARANCE_AUDIT.md). The rotary is part of the original board, **not a printed actuator**. Existing v5-v7 are archival prototypes.
+
+### Historical v7 CAD fit trial
+
+The archived prior mechanical source is [`hardware/the_scribble_v7_real_fit.scad`](hardware/the_scribble_v7_real_fit.scad), designed after import of the **real Elecrow board, Adafruit cell, 16×14×2.02 mm INMP441 STEP, and named 1027 motor STEP**. The adjusted outer dimensions are **46×82×20 mm**. The complete assembled STEP, generated from real component solids, is attached to the [Real CAD Source Audit Actions run](https://github.com/pauldavid1974/the-scribble/actions/runs/38950129792). See the [measured fitting report](hardware/V7_REAL_CAD_FIT_REPORT.md).
+
+For the active **v8** source, generate actual printable prototype meshes with `node scripts/generate_stl.js --part rear` (or `bezel` / `side_caps` / `print_layout`). This tool now reads **v8** OpenSCAD directly. **The current HTML viewer includes v8.3 and isolates the actual STEP-derived rotary wheel.** The part-pair clearance evidence does not replace a full case-body CAD intersection and physical assembly test.
 
 ---
 
@@ -21,7 +36,7 @@ Spoken thoughts are captured to internal flash memory as clean Markdown (`.md`) 
 
 ---
 
-## Mechanical Enclosure (v5.0)
+## Archived Mechanical Enclosure (v5.0)
 
 The enclosure is designed from Elecrow's official `00-2-13_view_asm.stp` CAD assembly and Eagle PCB schematics.
 
@@ -70,10 +85,18 @@ the-scribble/
 
 ---
 
-## Interactive 3D Model Inspection
 
-Open [`hardware/case_model_viewer.html`](file:///hardware/case_model_viewer.html) in any modern browser for:
-- 360° orbit, pan, and zoom controls.
-- **Explode Stack Slider:** See internal component layering (battery, PCB, mic, haptic motor, and bezel).
-- **Cross-Section Cutaway:** Inspect internal wall clearances and snap-pin mating.
-- **Haptic Test:** Hold the "Talk" button in the viewer to test real-time vibration simulation.
+## Interactive v6 CAD Viewer (Fit Prototype)
+
+Open [`hardware/case_model_viewer.html`](hardware/case_model_viewer.html) in Chrome or Edge. It is a single self-contained HTML file (including the preview meshes) and works offline once downloaded. It renders the **v6** rear shell, bezel, and top controls from the OpenSCAD prototype meshes, plus explicitly simplified component clearance envelopes. The viewer supports touch/mouse orbit and zoom, presets for display/rear/USB/top views, exploded assembly, component toggles, and a shell cutaway.
+
+**Do not use the viewer's lightweight display meshes for printing.** The authoritative printable source is [`hardware/the_scribble_v6_fit.scad`](hardware/the_scribble_v6_fit.scad). Install OpenSCAD, then generate precise STL parts from that source:
+
+```bash
+node scripts/generate_stl.js --part print_layout
+node scripts/generate_stl.js --part rear
+node scripts/generate_stl.js --part bezel
+node scripts/generate_stl.js --part side_caps
+```
+
+Generated files are saved in `output/` (or supply `--output <file>`). Review the [v6 fit audit](hardware/V6_ENCLOSURE_FIT_AUDIT.md) and [issue #2](https://github.com/pauldavid1974/the-scribble/issues/2) before test printing or installing a LiPo.
