@@ -88,10 +88,9 @@ module rear_shell(){
         // Genuine BOOT and RESET access holes through rear floor.
         for(py=[-15.2,-25.67])
           translate([-11.9,py,-0.1]) cylinder(d=2.4,h=2.1);
-        // Three genuine through-holes for rear acoustic entry.
-        for(dx=[-2.3,0,2.3])
-          translate([mic_xy[0]+dx,mic_xy[1],-0.1])
-            cylinder(d=(dx==0)?1.7:1.4,h=3.6);
+        // One sealed acoustic through-bore, 2mm diameter.
+        // Single centered acoustic bore preserves foam-gasket sealing circumference.
+        translate([mic_xy[0],mic_xy[1],-0.1]) cylinder(d=2.0,h=3.6);
         // Bottom pry notch at parting plane.
         translate([-5,-case_l/2-0.1,rear_h-0.9]) cube([10,3,1.2]);
         // Captive side-control paths. Installed from inside before closing bezel.
