@@ -49,6 +49,8 @@ jobs:
               print('SLICER',part,'watertight',m.is_watertight,'parts',len(comps),'bounds',m.bounds.tolist())
               assert m.is_watertight and len(comps)==expected, part
           PY
+      - name: Check real rotary wheel and pushbutton fit against case triangles
+        run: python3 hardware/verify_rotary_clearance.py
       - name: Save printable v8 mesh files
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
