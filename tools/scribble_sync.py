@@ -53,14 +53,29 @@ def sync_notes(port=None, output_dir=DEFAULT_OUTPUT_DIR, baud=115200):
                 if not line:
                     break
                 if line.startswith("BEGIN_FILE "):
-                    fname = line.split(" ", 1)[1]
-                    dst_path = os.path.join(output_dir, fname)
+                    raw_fname = line.split(" ", 1)[1].strip()
+                    fname = os.path.basename(raw_fname)
+                    if not fname or fname.startswith("."):
+                        print(f"  [SKIPPED] Unsafe or hidden filename: {raw_fname}")
+                        continue
+                    dst_path = os.path.abspath(os.path.join(output_dir, fname))
+                    if not dst_path.startswith(os.path.abspath(output_dir)):
+                        print(f"  [SKIPPED] Path traversal attempt: {raw_fname}")
+                        continue
                     content = []
+                    timed_out = False
                     while True:
-                        sub = ser.readline().decode("utf-8", errors="ignore")
+                        raw_sub = ser.readline()
+                        if not raw_sub:
+                            print(f"  [ERROR] Serial read timed out while receiving {fname}")
+                            timed_out = True
+                            break
+                        sub = raw_sub.decode("utf-8", errors="ignore")
                         if sub.strip() == "END_FILE":
                             break
                         content.append(sub)
+                    if timed_out:
+                        break
                     with open(dst_path, "w", encoding="utf-8") as f:
                         f.writelines(content)
                     print(f"  [SYNCED] {fname} ({len(content)} lines)")

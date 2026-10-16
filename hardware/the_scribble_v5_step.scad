@@ -85,9 +85,12 @@ module flush_top_bezel() {
       translate([0, 2.625, top_h - 0.60]) cube([23.71, 48.55, 0.02], center = true);
       translate([0, 2.625, top_h + 0.05]) cube([24.90, 49.75, 0.02], center = true);
     }
-    // Snap sockets (0.25mm tolerance) for the 4 corner pins
+    // Snap sockets (0.25mm tolerance) for the 4 corner pins with spherical head clearance
     for (p = [[-13.8, 30.8], [13.8, 30.8], [-13.8, -30.8], [13.8, -30.8]])
-      translate([p[0], p[1], -0.1]) cylinder(d = 3.6 + 0.25, h = 1.7);
+      translate([p[0], p[1], -0.1]) {
+        cylinder(d = 3.6 + 0.25, h = 1.3);
+        translate([0, 0, 1.15]) sphere(d = 3.7 + 0.30);
+      }
   }
 }
 

@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const html = fs.readFileSync(path.join(__dirname, '../case_model_viewer.html'), 'utf8');
+const html = fs.readFileSync(path.join(__dirname, '../hardware/case_model_viewer.html'), 'utf8');
 const lines = html.split('\n');
 
 // Extract geometry generator (MeshBuilder + buildAllPartMeshes)
@@ -17,8 +17,8 @@ ${geomCode}
 const rawParts = buildAllPartMeshes();
 ${exportCode}
 const stl = exportPrintableSTL();
-fs.writeFileSync(path.join(__dirname, 'the_scribble_v5_step.stl'), stl, 'utf8');
-console.log('Successfully generated the_scribble_v5_step.stl, size:', stl.length, 'bytes');
+fs.writeFileSync(path.join(__dirname, '../hardware/the_scribble_v5_step.stl'), stl, 'utf8');
+console.log('Successfully generated hardware/the_scribble_v5_step.stl, size:', stl.length, 'bytes');
 `;
 
 const fn = new Function('fs', 'path', '__dirname', fullRunner);
