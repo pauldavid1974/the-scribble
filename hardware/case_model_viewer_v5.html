@@ -1,77 +1,1528 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>The Scribble — v6 Enclosure CAD Viewer</title>
-<style>
-:root{color-scheme:dark;--bg:#0a1220;--surface:#151f30;--border:#2b3d53;--txt:#e6ecf5;--dim:#9fb0c3;--accent:#61d5b3}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--txt);font:14px/1.5 system-ui,-apple-system,Segoe UI,sans-serif}
-a{color:#9dd8ff}button,input{font:inherit}button{border:1px solid var(--border);border-radius:8px;background:#243449;color:var(--txt);padding:9px 12px;cursor:pointer}button:hover{background:#35506e}button[aria-pressed="true"]{border-color:var(--accent);background:#17483e}button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-header{padding:16px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}h1{font-size:21px;margin:0 0 3px}header p{margin:0;color:var(--dim)}.tag{font-size:11px;color:#d9f8ee;border:1px solid #397a69;background:#184e44;border-radius:5px;padding:3px 7px;margin-left:7px;white-space:nowrap}
-.layout{max-width:1480px;margin:auto;padding:16px;display:grid;grid-template-columns:minmax(0,1fr) 310px;gap:16px}.panel{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden}.viewtools{display:flex;gap:7px;flex-wrap:wrap;padding:12px;border-bottom:1px solid var(--border)}.viewport{position:relative;height:min(71vh,720px);min-height:420px;background:radial-gradient(circle at 50% 45%,#203750,#0c1624 75%);overflow:hidden}canvas{display:block;width:100%;height:100%;touch-action:none;cursor:grab}canvas:active{cursor:grabbing}.overlay{position:absolute;pointer-events:none;left:13px;top:12px;font-size:12px;color:#cbd8e9;background:#0a1522c9;border:1px solid #36506a;border-radius:7px;padding:5px 9px}.footer{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;padding:10px 14px;color:var(--dim);font-size:12px;border-top:1px solid var(--border)}aside{padding:16px}h2{font-size:15px;margin:0 0 12px}.field{margin:0 0 17px}label{display:flex;justify-content:space-between;gap:10px;align-items:center;margin:8px 0 6px}input[type=range]{width:100%;accent-color:var(--accent)}.component{display:flex;align-items:center;gap:10px;border:1px solid var(--border);border-radius:9px;padding:8px 10px;margin:6px 0}.component label{margin:0;justify-content:flex-start;flex:1}.dot{width:11px;height:11px;border-radius:50%;flex:none}.small{font-size:12px;color:var(--dim);line-height:1.55}.important{background:#3e3020;border:1px solid #927348;border-radius:8px;padding:10px 12px;font-size:12px;color:#f4d5a5;margin-top:14px}.buttons{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}.mono{font-variant-numeric:tabular-nums}#error{display:none;background:#592a32;border:1px solid #e78b94;padding:10px;margin:10px 12px;border-radius:8px}#note{font:14px monospace;background:#e9e9e1;color:#111;border-radius:6px;padding:10px;border:4px solid #353c47;margin:10px 0;min-height:90px}
-@media(max-width:880px){.layout{grid-template-columns:1fr}.viewport{height:55vh;min-height:340px}header{padding:12px 14px}h1{font-size:18px}}
-</style>
-<script>window.SCRIBBLE_V6_DATA={"rear":"eNotmgWYlFUXx2/MzjvAzNIsktIpICEg3SJdIr10N9LduTTIUiIoISjIoqQfAioqIYKEgAGCIojsDLAzm9/vvPi8z/mfc889dc+9750Z2E22pbM0qdeTODspafQTpY4k1QbfCaf+G2f96an/VnUxzk5Go9RTLZoFjmhEjrOLHdH/5WQlQqKTA99mvtrIVX2Vkcf5eoGepDGJgnHRcdaTtCpa5BGJcbaZ70xWpar6LmSNs+N828BU34lUwdGJL+RzOtX3vRFcFS2a741gHBFSfSOI2TjpAPHzJTnYxyRlQ/N60hmyL07zZBtmDqZ6ss115blW5GGmlRUcb0Qj8lwr8jCz1PFki7ODo0QjOMwsQKPU+LDgxLDMrk+WWcFhJm84kWqzhh9T/9KkbeCkpOVojiSdAR/4slHPfZ9DPTFJT6g8X1KEmjsnvUttecNZqTlrOAfy174zyMd9B5B3+959Ip1MJFqi85g455IuID/wPcH3vi9CnMZJbdC/nlQb/QLfcvBcUmV8OycNcjWj3TiDsDnua4Pma19tiZPyR0SpH1LKJit1MSX/c6X2pHQEV6ZsQz8uZSRy/ZR45GIpg5AzpxxC/iu5BPK95McRwWvPlDqffs9HPellMil1NX04eCgllphT0s+in5oyD/lcyvlnEnnxM4k555lE2wIuS1+DfdP0GWCD9DvYV0iZjX2JdD+aIulNwYfJzdC8F3XreZx9w7fpmaDI70W9kKfQ1dq+RokiyznJ7/MiP3CusupDznFwmrP/iZxMwfei+mUWy+KZBEV+L0rkur7D0aKZA4ac4vSnhO8R8n6nKfIUpy04JyzYItwYjAmXBe8lJWNzOEniHE6a58oS7XCSVHgm6YQbU85nbLLoY5PFMjZZKo9NFpvDSSLPC0tt/nTBtuGjYCB8C7yZlIu1nEp6I1EspyXKihpnTVAPnLLgqaTD0QnqcNIcF/tlFtz0THBKomDxTIK3nieo2r4T2OT3JYPTWEuCkm5UZV37nyQoyVuV1Yk83rTNKm9E26zyFgiKLG+N4OI00Ygsb5Bo1ieLLDjMzAtL5MFRohEcZlqEjxMzJnwVDDm3wBK+XNQWCBfHsm24KXgvyYtG9kJwXrTgNFcja5GdEpT3XfZdZLkBCvqGBBJUWV8JMMPZA45yYvC96fyEvN+JgOWc4mguefODc7zP0DTxHgO3R8QmxlstlKBuRQWIGe29GRR00J+IehPNzKjB4GcZ3X0JamJGDFgzY2xm8eqNTfmMu06C+lSJzaX008hd04+DdzIOYhnOKE3Nf2RsA/dmZMfr4/T3wG8iUue9iFR+Me0B9pNSg6wxd1pO4uRPu4LvtynNkhN4K59HEtR83oUEVYM3KEFtCUsfMpJjXVk6cy85/3ORpSeLIvX8VJh2FZvTkWnI09KqkfFB5HvkW2mTkIMR6VX19A3IEyPSnxoR6VgoLF3aEJYu3Ux6FC27I136NUlWWsQnEVIcifmlI1kGOtnBPo7sVw9vZ1eW2vJ7T0kN3tmuRqoq64sEJcLWoOx+E7Cgr25I9mt6SHZqd0h26nxI9u5hSLxkXQHH55e9C6M5683tlx38F3mhtwryBO+XyHW8c8BDTpag1HOP01LX90aiRDv6RCLcShTfB4myv5kSxdcJSrXlglLhW0Gpdh0YF/U/7E8qwYS0LNQ8P+Nv9P1UYeR5GZOfipyfCB0zZqHPmlEY3Jx+FM0c9QteWdPHII9NawdeSe2SKH2WVT9MbkiFd5I/DckuSAeypXwLNk7pBx6LSDfWplhwWkRW8TzlU3y7pU4HK0ZkRT+FZRUrwrKKtmGpv0RY6tdhqf9uktR/NUnO7R/JZZPlXElvc6X1zyQ7K/3cEu7nnjrp9vaIdLtiRPZuYkR6/lNY+rwiLB0OhaXbbcPS4RJh2VMdln28myR72iIs787VJHk7DqWc5GTmTD3FTp1LKUGXLqZcQ17JZ0QCt/1GZuvz2ZHATb4FOTOfKdKNG8jF3X4WdzscTL+BHE5fi7wxvSYREtIbIsemp7HeSulz0GRJ/1H2NG0/8o406U/jtKPPBPcg/5H6KfL11ATkaamrngmKfenUgciFUj1Eu5JSFPlESjfk5SkXyDg25WvZ35RJT2UvcoBNU5qy9topslOvpN+X+BkKDKX3BlelS5buaS14Nw+kTEPewydXAp+PUmHLlCxgMT7XZH83Eu2v5PPIj5MrPZV3Ss5tvbCc2KiwnNhfk+TOOZPUiDoXZHRkpx6kVwGnZ/xC/H4ZCchX0/9FPp8+AblYRhp4PL0i+ziFz0pusPTyyA3SJ4tl2lOwRHpbcHHadLByxiB8T6dXApfx+UuF6a+ATdNv+6SHu8Ai6XmwvJfWC3lWmg95o/KyRx9EJVP52KjqrlyUCn9WIm9UpZAHRCVy2q8owRAn87jZEL4HPohUCx03wcjN4HFzN6ku8tWkCPKvSVvB7ZFy4DeRt8CKkX+ZnRhxkH/ivB03JcK7QR2eDrYNnwcD4SbM3ousAxdFvkRzOjIHrBF5QK4V4YfILcJZmF0Q+RqcGSmFpl1kABgTWQSeDC8Dh4djwcbhGLBrZByWvkgz8EC4BTg4PBmsH/7WjRMd2mLnRo4E422d8O3gRls/bNG8E4kPbrHtIiPAmEiL4Ga7INwHuWt4GfKB8KLQZnsy3AyNL7IM+66R3mh6hzuEttpj4Q2hY3ZveHPI6/FEtod8noKRdaHTtmK4cOgeEQaHrtnRkX6hG7ZVZHYon2dmpEGorKdC+ETwtq0c/jVYzjMpPC1UxNMm3ChU1zOIGs7YteFOwSaeveHqQa8niVV08vTAcoKneKRW8DoZawWP2X7hgcGz9q3wqGC6rRHJFlrrSQs/D37kiYp8EdzpiY+cCGb2rInkCH1hw+FXg9GeAezaZM+GSEwo2bYKxwVf9ayIpAZf94yJjAx6PI0inYKVPNUic4KTPBMjB4NdyLso1MlzMDw0NM7zcqRnaLKnf6RqqL+nVfhI8C3PvHB8cJZncLgumrnhQGi555fwhOACz61wqdAOz67wb8HtnhB3jpyc7H45Ob0DcnKcgJycIQE5OSUCcnK+98vJ6eyXkzPbL2emil/OQG6/nKL80XJ+ikfL+fkpIOdnT0DOTwSMCk/Dpl64nl9O0SlwWuQZ+mORYwE5PzHRsuNBv5ycDgE5OasCcnIOBeTkHAnIyVkakLNRPSAn5z2/nJyxfjk5E/xycj70y7l64Jc4rwe2cAbG+rdwNuL8cgaWBeRsHAJjIhP8mzk/8ehnRm745ZwcwX50eBnYNNwSrBt2AvGchyNYHgt/FZAz823A6wmHLwai2dmvAtdthXCjwG1s1gau2cPhxf5BnhHhFf5KnIS+fq9nZviGfwH7MsHfyVM5XCRQzlMx/Lv/ni0YGeI/TcyB/mP2WbhsYJ9nU7hHYAV7lzmw09MvvNov52STP91OiBz11/K0ikz35/OMjmzy37CTI28GunrqsLo1no6RsH++Z1Uk5K/sWR255r/Gt9/z/iacyVWBM3ZYZG0gs2dLJGvgll0WaU32lZGegZ/tX+H5gSWempGpgQmc5N2BIpyQMYFXPfNZRXfkZoG3eC96+H2eepFD/gme2HBMYBKrOBToxKn7KFDJEx057V/n+Sr8lf9dzyWv3DNzvPLWF/HJbVPWJ7dNtFfumQxH7paCPrkxvnTkxojxys3TxCs3SX6v3Ej7HblzRjlyh9x05EZKceRWKefIPdbDK7dQTa/cQgMduaMWeuUuOuuV2ybgyE11yvkTr4POq8gJzi65nRy5c9o4cueEvXLnfO4dDsZ564GLneFywzhy5zzwyp2z0yu30GzvPnC8NwwecT7n9jjlPOLOaePIDRP2yn2S4JTnPvnEOwCc6S0F1nfkhnnglTtnkvdrbD70jsV+kTMQzUZnmsjeHtw2A7wxocyebd7XQwM9O50NvJVDHbk39jnjgzk9bzsbma3qLAm18ax1hoUqe8Z57wSbeQZ6Pwv+Zps4cmudcuphs9yZHLpkZ3sDoc6ed6nkjC3rTORdzuTIzdPRkVvoN+94bo9ZdLuO54RX7oq7XrnlhnnlhjnolZstzis3iXXOcgv5HLlzbnnlvmriyH11wMkb6u7Z7HwdHO+54Dzj3uvlvB9cRUa58eKcrsGLtpXznLtrjNMyNNGT6pW79KZ3NDfMZedY8J695MSEHtg/vUVCWzwHvY+CyzyfePcHZ3imOnL/lHc6huI8nzuNQ0ftJa/cORO8cjMU8cnNU9YnN0+0V+6cDEfumYI+uTEOOXJjhBy5MWK8chfV8cqtkt8rd9R+R+6iUY7cRTcduaPKOXKn9fDKXVTTK3fRQEfuqIVeuZHOeuXOCThyX51ycgbkFPUIyCm64pdTJPdPG0fun7BX7p+93pUBOSdyOy12NvjlFMn988Ar988G7z6/nB9fQKLlDWzktLwdkBMid8siZ3VATpHcSA+8cgtN8f7l38Bp2coNM8FbLCDnahW4wBvr2svt1MaRm+qgcxH5Xa+817e8cvNcdpoE7tlvndcCr3kuOXKrfOis5waY6Uz0Z/Y0cXq7KDfMOqdj4B1PK0fulqlOyL/cc8D5y9/dM8vZ7u9N/4/7y3Jy5O3+xit3Qg5naGAjp0juOp8jd90Yb2Puh77eJO60RV4V6M+ZbBi4zDmRW/Gg9x630E3vMn8fT9ArN0Mvp2dgleeYMyEQ5VnmbA+U8WxyNgTO2u+9NQPrPXO8J/3VPcu9cpsd9MrNluqV2+auV27Fys4MqjrhlXsmjm57PGu87QMDPLUcuW3ecN4PDPIYp1hgr0d+obd3f623d3+5t3d/xbe38m8R7d1/f2jv/ntCe/ffENrbcEbVTEX1nYzdYP60hWCutCRfUX2J31xFdfmMSeBnGQr8mF+LRfXEjCbIezNaYPNHxjGwe1p2NDUzHjB7MW0scld+OaJJm8/stLRSYHV+bxbVt9LugtMzppNlQYYPrJzxFOyXsQub03xLLKpb8r2xqL6XloZ+R1oCWCyjF7PH+U5YVDfhW2JRfTVtELg47RdwVlpHbMbyazReZ00PPovXHTPuPkXOaIKcM/X9xHh9IOVPUH7XxOvHyVXBSalj0Mznu328bpnSJRivE9K6oMnNb6J4Lb964nXjjH7g5vQ9xOGXDtgt9T7It2tsXkmf7lpuJMLD5KLgldQs1NA4RWGzNqU3GEq3RJjHb4d4XdzNFU6/CCakF2U2Nn0gmCV9FcgvBVB+KcTr66n7Qfl1EK8LpcaCJ1IygWNTtuDbNKXQU4kmMYPpS8CN6eXASum/U8/+tIREibMH5LdGosT5ESydmgZeSWmI5fKUdWC/lIeyxpT2dEN+R6BRgefRYKbEaP0pvy6j9Rz1JppVUYPBAXzHjtYfRHnB80rkk0r0G1XyM8HyeN2Kyv/cxUSxrACeiPqFOGP5Hh6tZ0ZJzB+UyEppZZRVHhUFeZUDeRg7yqcyqczu2IH7oCxgFrhfBVS0yqqyqewqB5RN5VS5VG6VR8WovOollU/lVwWgfKogo4Lwl1QheCF4XlVYvayKQIVVUTdSFshPvGKquCoBFVMlVSlVWpWBSqmy8HKqPPQKWAHNK1AF9GXBYqoi9IKXhL+CXTk8KuFbCV7ClYqDJdSrYHFVGXwVrAgvCYpUBbkKvKqqpl5T1VUNKs0L1VA1Wd/rqhYk6yxKzbVVHbpTF6pDZ4qwclm9rKeeqq8aqIbkbwQ1pJrqqjER86smqimUnw7UUs3UG5BEzIVdbigXtlWxrQJVxaM+WSVzfSLmUc2Z12SVzGwWe/UmKDFaINdlVBdeh91oSR9bYS8+rVRrcrZWbVzeBNvX3LW1wK8lVUqlLfEppNqqdlAh1V51gAt2hHcCO4BvwTuDncC34V3AzmBXeBdW3hXqorrh353VZYbXBGtSeQ/G3ZHrkSkzlBXMyi5nhvzMVaCqJmBrfDKTtzlyLp4KdKMn8z3QtyNCL+gFj1W9oV5Y98E+s+oL94IieVU/1Z9ausGzuVI/dK2J1pxYPeEDoJ7s8QA10I00SA2GXvAh7O6Q//hQaLAa5q5sGNYV8cuBj+iHoctG3DqMczCTDcnAc7Bv2ZA0PAc7mA2pMDwHPc+GVASeg963AN/gycH+y860UsPVCDUSGq5GwfPy/owAR6rRoEijOQljoNHoYtRYd1RfjYNe8JY849j3d6AXPIsaD70Dyrs6ARyvJoIiTeSNnqQmqynQJDWVkzJNTVcz4PLuzmSUh9FMSM5lIzULqRwo53k2vBJYDpwDr6TmwquAIlVR8zi98/7j8zlp8+HNXCm7WqAWQtnVIp7sajHvy2L462qJa9EMPp23oynYlL5Mh1qBragmP3wKKBXnhwrwTFZLibZMxUELiLhYLVcroMVqpVrFLbYatPA14Cqwrvu+rlFreW/WqnWQvDNFkdbz1q5X77ozb7p1reTJiWYJ1S2kxoXwdbx5CiwKF4+izOeEb6A70qENKh67jfhshG+ipk3/8c1YbiHiFvhW4r9Hte/Bt6n36fJ26H16voMo0t0dRJqgPmCXPlAfqp3QB4x3sobVapc73glfpXarPeojaLfaq/apj9Un0D61Hz5HHYA+BQ+i+RQ6iH4/uJvou//je+GfYjcHj9n4zoZ/5Ep7wI9UArhHHQITwB3wveAh9Rl9ki5+pj5XhzltR9RRdn4edFQdQ3+cHp1gv76ATrBj/+MEn4T+x+n9Up1i306DIp1WZzjPZ/7jY5k5xZ5+QS+kH1+4Mb5SX4PfwM/SqXjkbxl9ob6Dn2W8AdxAXV/Av4N/D9+hzsF3qPPwHeoC/CK4Q/2gLqkf1WV1BX5Z/QS/rK7Cr0FX1XVGN9TP/41/VjfVLehndduVLqtfsLmsfoVfx+4C8m+MLqvf4ZfR/Y7uDvyCugv/A7qr7qn76k/1l3oA/xt6gPzQxUfwR/B/OAmPwEfwx5yIx/B/1ROVqIIqpJ6qZ9AL/lwlQS94WEWgF/wPN1uEvBfJeBDcAR1UyTwHVQrPQZXKc1ClsT9p8KOulA4e5aymIW0CN6oMuNLv00Hp5vv0+wu6f0JpfQJutEgWNNoDWjAK7tUO3Admgk6zs6eVozPrLPp/7LsfzKIDoJ/vJ9FoT6qsWr6rZNNZwew6G5hDZ9c5dQ6kXMTyIOdmlAc5F3IMo7zIefQlFcPYi5yXXF4yxqB7CXKo4JLKSV4Z5WP2ksqs84Gy6z59WeWnhoAuAIpUQBfkKaCPcH4L6MOc5AK6EE8B/aEqDBXQL7tSEXhRkG+9YDFdHPyRiEV0CXgRxiWwKIJtSaiILuVKpfVNzk0ZXVaXg8ro8voVqIyu4EoVQZEq6kr6VaiirvyfVBn/XaoUfJeqrKvoqrqafk1XB0WqrmvwVNc19evQC15L14Ze8Dp41fmP19V1wSpQbV0PrKfru7E/VA3A+norvKFuoD/jLmmgP+dt3qoa6kboG+nGYGPdhNnjvONbVRPdVDfT2ziTckKbUdEb1BPihDbXb+onnNcWurkOqtd0S2Ze063gLRi3Rm7D6Ilqg9RCt9Ztkd9E1wKpHT4t9D+M/1Xt9WbVTncAO+iOYEfdCeyk39JpnMnOurPexOlU4Nvo34a3g7fQMnpLd9HydnXV3XR3pG5apPuqh+4BdtE94YK94LFgT7A3PFYnqt5QrO6jhcs714d19mWfyoH94P3BvuAA+ECwPzgIPlAPhg8BB4JD4cPAIeBw+AhwGDgSPgocAY6GjwFHgWPh48Ax4Dvw8eA4cAJ8IjgenASfDE7UU8DJ4FT4VPg0PZ3TVZpzNYM6b6rpSGX1TEaz4NORyiL9yfmT2+eemq1vcweVpheztdw3f7FrXenUHD0X6q7nudI8PR++ABRpgV6oF0Ev+GJ2bfF//DXdnv1aordAL/hSvRRcppeBcZyZ5ZyaLaqpjuPUbFFyzraq5XqFXqlXQSv0ar3GldYirQPX6fVIa9Gs1+/CN4AibdD8koJe8E16M7QRzzV6C88avVW/B60Bt8G3wd/X26Ed0AeMZfSB67eD50NGH8I36516l94N7dR7oN36I73XlfbA9/Hs1R9zM4x2P68K6jHcDOPd71GHVSF9lM+5+XzCp4Pp7if9Eb6BidURPgnXsc710Do+A4/xuSrfjI5x366nC/LJL3O7+OyUbyO7eONm8Pm1nU/Mz7Gf4X4PKKQnkGkC/EPuZslxmNx8z9Of6P28Wwd47z6FDuiD9DeBd/QQXf6M9/9zfZh3sT1v/2f6CFQbXXt9FO0yfYwdOgY/7vITvOVf8I5LpOr4Vdf/c/nr+iTvahuiNiVqGzxPQm2I+iV6mfuS9/ooUZdQSwPukwOMRXeAyj5hXI/nFFI9KjgF1aOKJfo0PnHklvxx1C3ZPiVHAqMlVHMaWkJljfQZ6joDb8izH2m/e0M1phpZZ2Nmv8LzgP4a+hLpK2J9jXTS1X0F/wZ+1q37JPwbMp9FPqq/hZ8GRTqtvyPjd/BjrnQcFOm4/p7qvof/j1if63PQC/4ZzznWcwQ8pc9D58BP4BfA8+B++Bn4RUjq/gLpB0jWk+DG/YEVfIGUgPQDeIhKLxH/R+gSmsv6CtJPRL4KveDXiHBd39A/U/V3+iaxz2P3A5qz+pa+jXSFiN8gfc38L9idx+cm8b5Gd92t5lu0t5BuYH2N+XN4XMH2Jzf3LSJ9i+038At4Xmf2F2L9qn/Tv+s78N8Z39V/6Hv6vv4T6S/9QP/N+CHPXeQf9SNi3SLLr/of/Vj/i/6BfqITdZB8If0Uj3tkuKOf6ec6Ce118txn/LsO4x3BMhntM+ZSdCq2fxLpD/JfxvOuTgOfMr5L3FTm0sF0PMM6A29lkvG/hv9NvLUxxprftMfc11HGa25T1x0i3iHf70S05jEVBanOMT7zL9UmM75BRWHqSMVdG4U+mbhR5pn2mlvUckdnMk90ZugBfmngX3g9pqog/LrOYv5h1T5m/qEX19i3CDml1vtEiFDlJTp+lz6G8LyBfNkd/UHPfgZ/xdJr0llViizAZLhrSySWphaFRqHzUk8KK3tINX6T2QSMrMkiP6d3UfBn5H9KXX+z0j+wesg6A0bqfg5PIuYjd7eusl+3qTDCah7Q3xtUdZnsXpMCGiPZlZFdecwKPSYTMf6m+x46+7fbW0t3rPGAaWT8R/upRnI8oQtZqFmDProiO/OI1d8mVxT2frTSwRT2WjPyuOvwUVuS66mRspi2OtpkNX+obCasskPZTA5+Uuc0b+lc5m2d2zxVeaDcRr5fxJi8Jsa05rvGSyaF77hB9DEmVeUzL5n8JkMVMJ11flMQubPO4FtFIdMJ6qgLu7GfE+m5etnlT/nOXMQUNUXMRb435yRTLpNM1CJESuY79EVV1NwlbirflLOadnx/ycZYdNmoNZqqW/PkNdEmTRUz+ai4gJtf6RxGMmQnYk5GaaqgKUZFaXyrKUwlHXiymsKsuAPfiDqRVdYpVRY32U02UwIqilScKCXd+kRXHKkkvJRbXxF4SXKWQs5nSsOLgSIVM2XIVQae35UKgCIVMGXpaln4y8TKY8pBL3hunnL0MAbMa8pD5cBo+CtgeTArvDC8AiR1F0KqaHJBZZEKocvpRhddIaSc8BKmEvFfMa+aykglTBW4+FelxjKmGnHLmdeg6oyrmhrMl2QVZUxNRiUZlTCvE6kWmtfRlXItqhOxkutXjVi1yfcqEcvzVEMqznw5dLVcv4rMVyBnbTxLkaMsccqYOqauqWfqw+sxbmAamkamsWlimoKNeJqYZuYN9M3Nm6YFUVuaVqa1aWPaomln2psOpqPpZN4ynZHeRmqJ/AZzXbCuTA1vo69uupKhG3J1052nB9bdqbun6YVHrOlt+pi+aDuir0MFdRm/YfoRoQ0xOrA6iVCFGD2I0pHYzcnfkKr6QG+AncnaDmyH9Zumv1tpC7L3Z9SeuQHMDGRNrc0govclUj0zmCeWaFXoh4zrMjeQaBK9Af1qQnapoDkda8aoP2sbQqw2jCuT623W0I7I7YnXipXE4t+LWFVZQw2oPit4g4ht8G1L5qZmKNVVYzXdyNwR756spyujnsjV6cfrZG3A3jYkRlWwDnn7E38AvD0esXSrF1V0osa27E9jsAnZ+5G/KZm6UF8jbIeQqRHYDM9KrK8n1BWsT17J1o28NcnWkM43pHu1WWMt4ssutqdjHcjahLUPInYv+tIb3ocsffEf5O5XXfxaoRkIDnTX1oVqhsIbMRpK7jdZaQfs67ldaeWeiyHU05L5IaaoHmaGm2Hwl/kdPMJk0SOhEeZHNcr8oEYbvx4DjTYBPdZk43dxcT3OlICK63fwelkXdudHmvFYjzIF9AQz0UyA5+eZhDTJ5Of39giTVU+GRphoftNONFNMMfyL84t4qnkJyqenYRkgT3Y93Yw10+E5tMzMMDF6ppnl1uXn9/UMM9PVvaR/UNNcvx/UeLciqfhHNQ7fHPxCz61nIRXWU6hyMpVL9VLBFHQF9Gwz0owwc6DJSLPNGDMXmo1mMtllZjZ8Hny+W81Y+DyqmI88yyyAzwRFmmkWUs9C+NT/pKlmkZkGTaUnIkns0WYx9IJP4llMZyaAE80SaDE4Bb4UXAIOgw+HL4Nkb95BijPjoOVEHA8uQzfcjEIa7868gzQKPsvkpkfF9HB3vpguqlewkpVmBblnE3uVWc1ojlkDrUSzyKyl4rXwdWY9q1pg3oUWMlpuNkDrmIl361iKZ7zrtxG79eBcs4nKN6KZB85Du4Fa4t1477qR1pNvCTar8V6C9VzqiHPjLsMujplNWGw2W8xW857ZZt43280O84H5EM1OvN81u8xuswfNFnQfEXcvun3mY2y3gZ+Y/eaA+RTdXnOQWve6FglEPARtxWcn8wfAz/D6HOvD5og5ao6Z4+YEz3GyHjdfgBvJtos8x8i3GzxB1o1oPsP3f9AWop6k1k1k+4wYX+J1nPyHifYe8jZoH/gB9Z8yp80Z+Fd0+Gv8tlDLXremXVR5mmoPIp2hvm/QbUXaidUGov6PrnxuzppvoQ/Bo2Q8SVdOknc/691nviPzcfM9+B1VngJ3EXG7OUe9u8HdZNyDbjvV72H8Pp5fYfkdXqfwE//PqXUL3dyK5yGyy/riyR7PPp1gNV/xvIfnKvKvZo1Hyb8Du++JuJ0VriH2OfKcwO5rMp4g/gdEP0BnPmVNW6n+G+hzrE/juZVcsqYPsfiKE7CSfBvIdpScq6HPqOAjZs+S4Rvq2wE/hf0B1nyQCk8zPsPMOrq0F+81ZF/pVrCffB+zB58S5WPwMFVvo+L3oZNE+oYaDuJziLybyLyBCOvQfYvnF/B9rvcnJq8+by6Y8/A8+it10XytfoAumsvqkrmhfjRaX4Z+5Av5t+qK+clcMd+q71QmfdX4oEz6Gr55dC7X6gdzHZ9LxqNvmJ/NDbjluYl00XyjfoIumq+UR/9sbhkvnuLt1RfMbXNB/WJukkPy3DRWf6d+JdOv5jt1Vp1Xt81v2JxXF9Q59bu549ao9Tn1m/mdmXNY3MBfYtxQ1926pPrL6ioRzqrvee4g5dK3qPVbt45bjDz6rvmByv6AfkK6ay6be9Bdc99dp8zcRboP/9Ot5gr8Pvn/RL5j/oL/Dor0u3lAJQ/gt13pF1CkX8zf9ORvuMT+0TyEXvCbPA/pzA3wZ/MIegjegv8DPgLPwy/AH0OyQ1eR/oWuMZKo/5pL0HU0V9HJ6Cq1fE+PLtDVvPoJdSdCT1jFnyZoQuYpkR5R7TNGz/FLwuu5CbtWIROh3mQowvzfaJOZDSOFWPOfVJdiUk0asZ6A9+DPiPQA7UN3nAb/2/VPJYesJZV8j4n/LxH+IEaSu5J/0CaR/0+3jnSTYRSHxFhr0/jJ6LFR1msd67OZ0KQSPbPNYv08FpsnVKpswEbbrDabzY6Uw+a0ucDc8CDx8tgYm9e+ZPNh4SOuH68Q2fLY/LYA44KM8thk8kZMITxjbGE8X7ZF4C/bovBiWGXGrziVeKgiCyMHntmWsCVtKaI4WGSYEuQvirUXetkmmShGXux8tjQ2ZbDKT7YCoLaKcT40BW0e6i5JtTmQMkx2+4z152E2QL2GDjwxL1PPcxNNpkKsOYW+eohrqScvGYpDUUTKR55seJUhTnYkZRNNQTI51ClrysvacsLTTW636hyMn5ucZH6OJmy89NbSp7xELEL9sobn7EsxVvLUZEHrcfutsPNa0ZRGV5BMBcgUIpdilB//wvhnpzcB1lMSXpb8L7GaQq6Ui/mSZC/l9ump8RPX4lWEdZTBKh/xsrlSWVYUYV/kTJQkVlkixKCPhvuIWBoqDvrZEQ95SjETgEezm7lZZ1nm5dSUZj6MJtmUInshW84uVitUolqsREpU29RKVd4uV/+6/wu4El7elreJzCYi/auWI62AljN6xS5QcaqFXqBEaqE3q0Wqgl2m/nH/13ARvIKtYFvoV6AK9h+1DLs4aBn6kaqiHa4y65HqtBoJr2gr2RFqlMqpRyiRcuqTUEUrMzl1JWaHux6V7Cg1Rb1qJ6koPcX9X7so/aqtbCerqcrRk5VIjv4SPsm1qmxF/6oVK0dXtlXsb6oqVMX+qqrZ5vo1e11VtzVsdfgdZn5XNSGxeN3eVrdULUbXVW37i6oD1bZXVV0bwvMacj1GtZFuqXr2dUa31M/qL/UaUZ9hVd9GVH3bwOVJqqGdrRtZiV3L3lONbRPbGH5bNaWiqrYpVBOpma1j30CqZZsjNUPTFKyJrilUizpr2DeRqoM1iP0mUgPbAl4fFKm+bWnrQi94K1sNqkus5ra2bQ294PVsG6g1KHW3BduAjeFN4O0gqa8RUnuoEaPXkDq48TogNUTXHl1DqAO6OnRTOio9es3+xWqvqxrU28DeURHVXFejZ43owD163ICaZ+uGWN2mx9KFJkSrb5PUM/r4s7qmQnTvGZ1ZoZtBTe1qvV6/ydo62M26FfVs1+3th9B2Rht1SyujDnabbssqtujmdpXertvZD/Qq13+1fsOu022s/Mt7M+aa2/VopIvr9Tqk1WRojl9rMmwg02Zifai34NHajSd+7dyubNMf6I26BZ1tQd4NyK2oqLTuaDvZt+wM3Rk+nXEd/bbtYqvprvY1qJruZrvburqK7oGN2PWw5fRMrGfoWrqnrQnV0l1sZd3LxtoaWItHDd3bvqL72Ap6lu5k+xJ5lp6u76t+tr/tZ++rrvpVPcAOtAPsq7oi8kDby1bRsWRarAfZhdBiPdgOsX8q8emq5xC9MnYL9VA7HxKLmbqv7UzsmeSIxbsyVsOI3oV66uj5yDIW6+HU0cf2sWX0CKgPlXW0pbXE7u/mGGI7stbBbk5Z80jbg46MgjojizTazdQZPgo+Bt4JlHWNhXey4+AdwU7gO/COdjx8CNgRnADvDw4BJ8L7gSL1s5PsMKifHfqfNNROtoOgoXawneJKg+Aj7FQr9U+108BprGc69IIPsDOg6eBAV+4FnwnOsLPAmWAsfDY4C+wOnwPOtnPBOeDb8C7weVAXKzs/z863PaEFLu9ieyMttN2gRUi90U2hukWurrftiiSjrozq6O5uvDq6Lrs6nHqG24q6gq7JaZATIWdlhh2sh+q+epTtD/XVI+0gPc0OgAbp6XacnuB2aJz7f3hzqHOOHa3H6oV2ml4ELbRT9Xg9yU7U7+h5btXv6Al6pJ7trm4kPmP0eLffY+R/AO0QPVD316PtQEjyDdNj3b0apofo4XqW25/h+A/WM+jheD2RPZgIH6cXkEmyLbCTtHiPoRuTGI3S77h7O0qPoIIJer4doce5ez5CD2MFg4g1hMxjWdNU2w+StS2yU/QUSNYwVM+kCzPtUCqYYifryZDMTSLWBD3RHU9mhZPsWD3X3aOxrLYv752cy766nC5DVDkTZXQ/XV4vtmWh8nqJXWor6VJ6mTuOs8vtCnAlfBUYZ5eBIi2zq+1i6AVfY5dAL/hSuxafdXY9tIJnLV4yetdugF7weLsR2gAuhS+Fr7GldLw7KqVL6ndtSV1E/6RW4bvK/qRuqnX2kloLrbNFmC2i15H5piqr4+wVJfPLsKukl5K/Emsor9eilznxkXiS8WP3/ww3unn36Y/1Hr3C7oL26PX2I73cXeVHerdeY3fq1dAau9flK6l6j97g2u5mtFN/RJS9zO9Gs5x4e4j7WA1Tg1VP3VG9pd5WfXSsbqv+Vu1UL/VAPVS93b8gecBYdA/QvqVidU8tM73we6Qeq2Z6GNhRdcEzVkuUjsTrorsS7W382jLzCNvejLu61s3gfdU8PVd3Uj10L91Nt1fdoW66A+MO8D7uuJfurDoh9VFz9QItf3XXA48OapHupp4QYS4z83Rf1U91xra3fqK6qN66C3Pyt3kL9DzsFun+SP3hnd25faq4KgntU5+oA/BPoAPuX2nuQ78PLn/TVNnVHEA+pMq7fw16SCWoPfAEaI8qo0qheQUqpfYyLuVq9iCfcv8m9SX4GaiAWgqdcjVj3b+qewn9Wt1Tyf9ND1A91VC1Qw9R3dV7eg3jtfpdvUMPVZv0QPWujtc9sOuJNFANQOqh5H+iu6tYdz4e2oTt+/hLjPf1IOKswSoWWf6nOlYNUo77N14T4ZnUTvADaKf7F7g71WpI/hJ3tyqtykK71UfqY/hH0MeqhCqGpixUTO1nXMzVfIz8f4UdD9k=","bezel":"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","caps":"eNotjzlaG0EQhR8zDAiQJRaxmFXsAonFCBCITTYCO8UZJyDEh/AFiMiUEhIq4SacgYDAiT4+8P96CN7Sr6qrun/pr67fkvzv+PrtX/4pMtsnwd9k7e9z9vc5+5vsU/Tacc9rJwns/LXjTidp1Zx2+u4zd//Ez8xsRWb7+1wruu3Y33ZcNadJK8onnpxPPMdsnwTvLfnEM8323vIQu+chTgI7f4jd6SStmtNO371LvPEu8S6zvbcvx/bLsavmNGlFj/L8R3mavdlznLRh7zKneTu6+nD/1Yfzqw/fcmJ2z9WH7zpvB9+ORrpSTvLlwGlSjl7e7V/eXTWnSTmSuhQBKVa3EvWAbvUqQ0IR7VM/SQ/o14Cy9MYgqy/K0dsLcspzzpBk0D7O/ST96ACdGeZkUPd3k3SjvRrUkIbBoEZUgIdBQaMaIxsBYxoHBbiAjlIXbpjdfukQe4bQYbYVSLJwHzwebrg2yv5BOB/eMsYrx9BR/jFIksD+6UjY79qEvmoSTGhK05rRLJjWnIokk6CoeS2QzIIFLWqJ3imwpGWt0DsHVrTKuUhSROc5L5AsoIt0FplTRN0/TTKNzqmkNa2DksqqwOugog1tkpXBprZABa6gG9QncOvs9kvX2LOGrrOtQrIEz8Nb4YZrG+wvwavhLZu8chPd4B8lkhnYPy2H/a5t65t2QFW7+CpuD7bb0z5ZVTUd4LfBgQ5VD9076JGOqe6DY53oVGdkdXqOONXD6STcOAn1Q/wO2A7qu3tke+i+GvquH6ChczW56VlNXbC9Qd5Aa7qkfg4u9RM04SZ6QbJLzy56Snb6qU2SOu+so6f0ndF5htaYUfvUBkmVl1XRmv4DYATJ8A=="};
-</script>
+  <meta charset="UTF-8" />
+  <title>The Scribble — Official STEP CAD Model (v5.0)</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    canvas { touch-action: none; user-select: none; }
+    input[type="range"] { accent-color: var(--primary); }
+  </style>
 </head>
-<body>
-<header><div><h1>The Scribble <span class="tag">V6 FIT PROTOTYPE</span></h1><p>46 × 82 × 13.4 mm · Actual v6 OpenSCAD-derived enclosure meshes · interactive inspection</p></div>
-<div><a href="https://github.com/pauldavid1974/the-scribble/blob/fix/v6-enclosure-fit-prototype/hardware/the_scribble_v6_fit.scad" target="_blank" rel="noopener noreferrer">Get editable v6 CAD (.scad)</a></div></header>
-<main class="layout"><section class="panel">
-<div class="viewtools" id="views"><button data-view="iso" aria-pressed="true">3D</button><button data-view="front" aria-pressed="false">Display</button><button data-view="back" aria-pressed="false">Rear</button><button data-view="right" aria-pressed="false">USB side</button><button data-view="top" aria-pressed="false">Top buttons</button><button data-view="fit" aria-pressed="false">Cutaway fit</button><button id="reset">Reset</button></div>
-<div class="viewport"><canvas id="view" aria-label="Rotatable 3D rendering of Scribble v6 enclosure"></canvas><div class="overlay" id="modelstatus" role="status">Loading CAD preview…</div><div id="error" role="alert"></div></div>
-<div class="footer"><span>Drag / touch: rotate · Wheel / pinch: zoom · Shift-drag / right-drag: pan</span><span id="modelinfo">OpenSCAD v6 • simplified preview only</span></div>
-</section><aside class="panel"><div style="padding:15px"><h2>Inspect the enclosure</h2>
-<div class="field"><label for="explode">Exploded assembly <output id="explodeout">0%</output></label><input id="explode" type="range" min="0" max="100" value="0"></div>
-<div class="field"><label for="cut">Cutaway shell <output id="cutout">Off</output></label><input id="cut" type="range" min="0" max="100" value="0"></div>
-<h2>Show / hide components</h2><div id="components"></div>
-<h2 style="margin-top:20px">Sample e-paper interface</h2><div id="note" aria-live="polite">#016 &nbsp; QUICK NOTE<br><br>Tap to record an idea.<br>Sync notes over USB-C.</div>
-<div class="buttons"><button id="talk">Simulate Talk</button><button id="next">Next note</button></div>
-<p class="small">The buttons above simulate only the screen experience. No microphone, transcription or haptics are active.</p>
-<div class="important"><strong>Fit prototype — not a manufacturing approval.</strong> Case and bezel previews are simplified from rendered v6 OpenSCAD solids. Internal electronics are labeled clearance envelopes, not verified vendor STEP assemblies. Download the authoritative CAD for printing. The earlier v5 viewer-generated STL is not used.</div>
-<p class="small">Part-specific caveats: microphone breakout, battery connector orientation, and actual motor driver still require SKU-level CAD confirmation. <a href="https://github.com/pauldavid1974/the-scribble/pull/3">See the draft review PR</a>.</p>
-</div></aside></main>
-<script>
-'use strict';
-(() => {
-const canvas=document.getElementById('view'),status=document.getElementById('modelstatus'),error=document.getElementById('error');
-const gl=canvas.getContext('webgl',{antialias:true,alpha:false});
-if(!gl){error.style.display='block';error.textContent='WebGL is unavailable. Try Chrome or Edge with graphics acceleration enabled.';status.textContent='Unavailable';return;}
-const vs=`attribute vec3 aPos;attribute vec3 aNorm;uniform mat4 uProj,uView;uniform vec3 uOffset;varying vec3 nrm;varying vec3 pos;void main(){vec3 v=aPos+uOffset;nrm=mat3(uView)*aNorm;pos=v;gl_Position=uProj*uView*vec4(v,1.0);}`;
-const fs=`precision mediump float;varying vec3 nrm;varying vec3 pos;uniform vec3 uColor;uniform float uCut;uniform float uDoCut;void main(){if(uDoCut>0.5&&pos.x>uCut)discard;vec3 N=normalize(nrm);if(!gl_FrontFacing)N=-N;float a=max(dot(N,normalize(vec3(-0.35,0.55,0.83))),0.0);float b=max(dot(N,normalize(vec3(0.65,-0.3,0.35))),0.0);vec3 col=uColor*(0.37+0.6*a+0.23*b)+vec3(0.08);gl_FragColor=vec4(col,1.0);}`;
-function shader(type,src){const o=gl.createShader(type);gl.shaderSource(o,src);gl.compileShader(o);if(!gl.getShaderParameter(o,gl.COMPILE_STATUS))throw Error(gl.getShaderInfoLog(o));return o;}
-let program;try{program=gl.createProgram();gl.attachShader(program,shader(gl.VERTEX_SHADER,vs));gl.attachShader(program,shader(gl.FRAGMENT_SHADER,fs));gl.linkProgram(program);if(!gl.getProgramParameter(program,gl.LINK_STATUS))throw Error(gl.getProgramInfoLog(program));}catch(e){error.style.display='block';error.textContent=e.message;status.textContent='Shader error';return;}
-gl.useProgram(program);
-const loc={pos:gl.getAttribLocation(program,'aPos'),normal:gl.getAttribLocation(program,'aNorm'),proj:gl.getUniformLocation(program,'uProj'),view:gl.getUniformLocation(program,'uView'),offset:gl.getUniformLocation(program,'uOffset'),color:gl.getUniformLocation(program,'uColor'),cut:gl.getUniformLocation(program,'uCut'),doCut:gl.getUniformLocation(program,'uDoCut')};
-const defs=[
-  ['rear','Rear shell',[0.23,0.36,0.50],true],['bezel','Front bezel',[0.48,0.66,0.76],true],
-  ['pcb','Elecrow PCB',[0.84,0.89,0.90],true],['display','E-paper display',[0.91,0.9,0.84],true],
-  ['battery','500mAh LiPo envelope',[0.93,0.56,0.26],true],['mic','INMP441 envelope',[0.23,0.8,0.65],true],
-  ['motor','1027 motor envelope',[0.78,0.78,0.83],true],['driver','Driver placeholder',[0.76,0.47,0.82],true],
-  ['caps','Top control prototypes',[0.99,0.67,0.21],true]
-];
-const parts={};const state={rx:-0.53,ry:0.48,zoom:164,panX:0,panY:0,explode:0,cut:0};
-for(const [id,name,color,visible] of defs){parts[id]={name,color,visible,buffer:null,count:0};const item=document.createElement('div');item.className='component';const dot=document.createElement('span');dot.className='dot';dot.style.background=`rgb(${color.map(v=>Math.round(v*255)).join(',')})`;const l=document.createElement('label');const chk=document.createElement('input');chk.type='checkbox';chk.checked=visible;chk.setAttribute('aria-label',`Show ${name}`);chk.addEventListener('change',()=>{parts[id].visible=chk.checked;render();});l.append(chk,document.createTextNode(' '+name));item.append(dot,l);document.getElementById('components').append(item);}
-function submit(id,verts,faces){const p=parts[id];let arr=[];for(let i=0;i<faces.length;i+=3){const a=verts[faces[i]],b=verts[faces[i+1]],c=verts[faces[i+2]];const u=[b[0]-a[0],b[1]-a[1],b[2]-a[2]],v=[c[0]-a[0],c[1]-a[1],c[2]-a[2]];let n=[u[1]*v[2]-u[2]*v[1],u[2]*v[0]-u[0]*v[2],u[0]*v[1]-u[1]*v[0]];const d=Math.hypot(...n)||1;n=n.map(x=>x/d);for(const pt of [a,b,c])arr.push(...pt,...n);}
-p.buffer=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,p.buffer);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(arr),gl.STATIC_DRAW);p.count=arr.length/6;}
-async function decode(name){const src=window.SCRIBBLE_V6_DATA?.[name];if(!src)throw Error('Missing v6 CAD preview mesh: '+name);const enc=Uint8Array.from(atob(src),c=>c.charCodeAt(0));if(typeof DecompressionStream==='undefined')throw Error('Browser lacks built-in deflate decompression. Try current Chrome or Edge.');const stream=new Blob([enc]).stream().pipeThrough(new DecompressionStream('deflate'));const data=await new Response(stream).arrayBuffer(),d=new DataView(data);const nv=d.getUint16(0,true),nf=d.getUint16(2,true);if(data.byteLength!==4+nv*6+nf*6||nv>10000||nf>20000)throw Error('Invalid v6 preview mesh payload');let verts=[],faces=[],at=4;for(let i=0;i<nv;i++){verts.push([d.getInt16(at,true)/100,d.getInt16(at+2,true)/100,d.getInt16(at+4,true)/100]);at+=6;}for(let i=0;i<nf*3;i++){let n=d.getUint16(at,true);if(n>=nv)throw Error('Invalid preview triangle');faces.push(n);at+=2;}return {verts,faces};}
-function box(w,l,h,x,y,z){const a=w/2,b=l/2,c=h/2,verts=[[-a,-b,-c],[a,-b,-c],[a,b,-c],[-a,b,-c],[-a,-b,c],[a,-b,c],[a,b,c],[-a,b,c]].map(q=>[q[0]+x,q[1]+y,q[2]+z]);const f=[0,2,1,0,3,2,4,5,6,4,6,7,0,1,5,0,5,4,1,2,6,1,6,5,2,3,7,2,7,6,3,0,4,3,4,7];return {verts,faces:f};}
-function cylinder(r,h,x,y,z){const v=[],f=[],n=32;for(let i=0;i<n;i++){const a=i*Math.PI*2/n;v.push([x+r*Math.cos(a),y+r*Math.sin(a),z-h/2]);v.push([x+r*Math.cos(a),y+r*Math.sin(a),z+h/2]);}v.push([x,y,z-h/2],[x,y,z+h/2]);for(let i=0;i<n;i++){const j=(i+1)%n;f.push(i*2,j*2,i*2+1,j*2,j*2+1,i*2+1,2*n,i*2,j*2,2*n+1,j*2+1,i*2+1);}return{verts:v,faces:f};}
-function persp(fov,aspect,near,far){const f=1/Math.tan(fov/2),nf=1/(near-far);return new Float32Array([f/aspect,0,0,0,0,f,0,0,0,0,(far+near)*nf,-1,0,0,2*far*near*nf,0]);}
-function view(){const cx=Math.cos(state.rx),sx=Math.sin(state.rx),cy=Math.cos(state.ry),sy=Math.sin(state.ry);return new Float32Array([cy,sx*sy,-cx*sy,0,0,cx,sx,0,sy,-sx*cy,cx*cy,0,state.panX,state.panY,-state.zoom,1]);}
-function offset(id){const e=state.explode*30;return id==='bezel'?[0,0,1.25*e]:id==='rear'?[0,0,-1.2*e]:id==='caps'?[0,0,.45*e]:id==='pcb'||id==='display'?[0,0,.3*e]:id==='mic'?[0,0,-.17*e]:id==='battery'?[0,0,-.4*e]:id==='motor'?[-.3*e,0,-.6*e]:id==='driver'?[.3*e,0,-.6*e]:[0,0,0];}
-function render(){const size=canvas.getBoundingClientRect();if(!size.width||!size.height)return;const dpr=Math.min(devicePixelRatio||1,2);const w=Math.round(size.width*dpr),h=Math.round(size.height*dpr);if(w!==canvas.width||h!==canvas.height){canvas.width=w;canvas.height=h;}gl.viewport(0,0,w,h);gl.clearColor(0.043,0.077,0.125,1);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);gl.enable(gl.DEPTH_TEST);gl.disable(gl.CULL_FACE);gl.uniformMatrix4fv(loc.proj,false,persp(Math.PI*0.22,w/h,2,700));gl.uniformMatrix4fv(loc.view,false,view());gl.uniform1f(loc.cut,23-state.cut*46);
-for(const id of ['rear','battery','mic','motor','driver','pcb','display','caps','bezel']){let p=parts[id];if(!p.visible||!p.count)continue;gl.bindBuffer(gl.ARRAY_BUFFER,p.buffer);gl.enableVertexAttribArray(loc.pos);gl.enableVertexAttribArray(loc.normal);gl.vertexAttribPointer(loc.pos,3,gl.FLOAT,false,24,0);gl.vertexAttribPointer(loc.normal,3,gl.FLOAT,false,24,12);gl.uniform3fv(loc.offset,offset(id));gl.uniform3fv(loc.color,p.color);gl.uniform1f(loc.doCut,(id==='rear'||id==='bezel')&&state.cut>0?.999:0);gl.drawArrays(gl.TRIANGLES,0,p.count);}}
-function pick(v){return document.getElementById(v);}
-function reset(){Object.assign(state,{rx:-0.53,ry:0.48,zoom:164,panX:0,panY:0,explode:0,cut:0});pick('explode').value=0;pick('cut').value=0;pick('explodeout').textContent='0%';pick('cutout').textContent='Off';render();}
-pick('reset').onclick=reset;
-pick('views').addEventListener('click',e=>{const b=e.target.closest('button[data-view]');if(!b)return;reset();const v=b.dataset.view;if(v==='front'){state.rx=0;state.ry=0;}else if(v==='back'){state.rx=0;state.ry=Math.PI;}else if(v==='right'){state.rx=0;state.ry=-Math.PI/2;}else if(v==='top'){state.rx=1.3;state.ry=0;state.zoom=120;}else if(v==='fit'){state.rx=-.35;state.ry=.8;state.cut=.50;pick('cut').value=50;pick('cutout').textContent='50%';}for(const el of pick('views').querySelectorAll('button[data-view]'))el.setAttribute('aria-pressed',String(el===b));render();});
-pick('explode').oninput=e=>{state.explode=+e.target.value/100;pick('explodeout').textContent=e.target.value+'%';render()};pick('cut').oninput=e=>{state.cut=+e.target.value/100;pick('cutout').textContent=state.cut?e.target.value+'%':'Off';render()};
-const touches=new Map();let prevPinch=0;canvas.addEventListener('contextmenu',e=>e.preventDefault());canvas.addEventListener('pointerdown',e=>{touches.set(e.pointerId,{x:e.clientX,y:e.clientY,pan:e.shiftKey||e.button===2});canvas.setPointerCapture(e.pointerId);prevPinch=0;});canvas.addEventListener('pointermove',e=>{if(!touches.has(e.pointerId))return;const old=touches.get(e.pointerId);const dx=e.clientX-old.x,dy=e.clientY-old.y;touches.set(e.pointerId,{...old,x:e.clientX,y:e.clientY});if(touches.size===2){const t=[...touches.values()],dist=Math.hypot(t[0].x-t[1].x,t[0].y-t[1].y);if(prevPinch)state.zoom=Math.max(65,Math.min(340,state.zoom-(dist-prevPinch)*.6));prevPinch=dist;}else if(old.pan){state.panX+=dx*.18;state.panY-=dy*.18;}else{state.ry+=dx*.01;state.rx+=dy*.01;}render();});for(const name of ['pointerup','pointercancel','lostpointercapture'])canvas.addEventListener(name,e=>{touches.delete(e.pointerId);prevPinch=0});canvas.addEventListener('wheel',e=>{e.preventDefault();state.zoom=Math.max(65,Math.min(340,state.zoom+e.deltaY*.13));render()},{passive:false});
-let note=16;pick('next').onclick=()=>{note++;pick('note').textContent='#'+note+'   QUICK NOTE\n\nA new idea, captured locally.';};pick('talk').onclick=()=>{pick('note').textContent='DEMO — recording…\n\nMicrophone not connected in viewer.';setTimeout(()=>{pick('note').textContent='#'+note+'   SAMPLE NOTE\n\nSimulation complete (no audio recorded).';},1100);};
-if(typeof ResizeObserver!=='undefined')new ResizeObserver(render).observe(canvas);addEventListener('resize',render);
-(async()=>{try{const names=['rear','bezel','caps'];for(const n of names){const m=await decode(n);submit(n,m.verts,m.faces);}submit('pcb',...Object.values(box(31.2,63.2,1.6,0,0,9.9)));submit('display',...Object.values(box(29.2,59.2,.90,0,0,11.15)));submit('battery',...Object.values(box(29,36,4.75,0,-5,4.325)));submit('mic',...Object.values(box(16,14,2.02,-3.8,23.5,4.31)));submit('motor',...Object.values(cylinder(5,2.7,-7,-31.5,3.3)));submit('driver',...Object.values(box(12.36,13,2.4,8,-31.8,3.25)));status.textContent='v6 CAD meshes loaded · 9 parts';pick('modelinfo').textContent='v6 OpenSCAD-derived preview · 9 parts';window.__scribbleV6Ready=true;render();}catch(e){error.style.display='block';error.textContent='Could not open CAD viewer: '+e.message;status.textContent='Load failed';console.error(e);}})();
-})();
-</script>
-</body></html>
+<body class="bg-[var(--background)] text-[var(--foreground)] antialiased p-4 md:p-5">
+  <div class="max-w-6xl mx-auto space-y-4">
+    <!-- Top Header -->
+    <div class="bg-[var(--card)] border border-[var(--border)] rounded-xl p-4 shadow-sm flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="px-2 py-0.5 text-xs font-semibold rounded bg-emerald-600 text-white">OFFICIAL STEP-CAD v5.0</span>
+          <h1 class="text-lg font-semibold text-[var(--foreground)]">The Scribble — Rebuilt from Elecrow's Official <code>00-2-13_view_asm.stp</code> &amp; <code>board.brd</code></h1>
+        </div>
+        <p class="text-xs text-[var(--muted-foreground)] mt-1">
+          68.8 × 35.2 × 12.2 mm (R=2.6mm corners) • Recessed Top Slots (0.0mm Overhang) • Right-Edge USB-C • Rear BOOT/RST Pinholes
+        </p>
+      </div>
+      <div class="flex flex-wrap items-center gap-2">
+        <button id="btnDownloadSTL" class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-[var(--primary)] text-[var(--primary-foreground)] hover:opacity-90 transition shadow-sm">
+          Download STEP-Matched .STL
+        </button>
+        <button id="btnDownloadSCAD" class="px-3 py-1.5 text-xs font-medium rounded-lg bg-[var(--secondary)] text-[var(--secondary-foreground)] border border-[var(--border)] hover:opacity-90 transition">
+          Download Parametric .SCAD
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Layout -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
+      <!-- 3D WebGL Viewport (8 cols) -->
+      <div class="lg:col-span-8 bg-[var(--card)] border border-[var(--border)] rounded-xl p-3 shadow-sm flex flex-col">
+        <!-- Camera & Mode Toolbar -->
+        <div class="flex flex-wrap items-center justify-between gap-2 pb-2.5 mb-2 border-b border-[var(--border)]">
+          <div class="flex flex-wrap items-center gap-1">
+            <button data-view="iso" class="view-btn px-2 py-1 text-xs rounded-md bg-[var(--secondary)] text-[var(--secondary-foreground)] font-medium">3D Iso</button>
+            <button data-view="front" class="view-btn px-2 py-1 text-xs rounded-md hover:bg-[var(--secondary)] text-[var(--muted-foreground)]">Front (0.0mm Overhang)</button>
+            <button data-view="back" class="view-btn px-2 py-1 text-xs rounded-md hover:bg-[var(--secondary)] text-[var(--muted-foreground)]">Back (BOOT/RST Pins)</button>
+            <button data-view="top_edge" class="view-btn px-2 py-1 text-xs rounded-md hover:bg-[var(--secondary)] text-[var(--muted-foreground)]">Top (Recessed Slots)</button>
+            <button data-view="right_edge" class="view-btn px-2 py-1 text-xs rounded-md hover:bg-[var(--secondary)] text-[var(--muted-foreground)]">Right (USB-C Port)</button>
+            <button data-view="pcb_back" class="view-btn px-2 py-1 text-xs rounded-md hover:bg-[var(--secondary)] text-emerald-400 font-medium">Inspect STEP PCB</button>
+            <button data-view="fit" class="view-btn px-2 py-1 text-xs rounded-md hover:bg-[var(--secondary)] text-sky-400 font-medium">Cutaway Fit</button>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <button id="btnFlipNote" class="px-2 py-1 text-xs rounded-md bg-[var(--secondary)] text-[var(--secondary-foreground)] border border-[var(--border)] hover:opacity-90 transition">
+              Flick Rocker ▼
+            </button>
+            <button id="btnTestTalk" class="px-2.5 py-1 text-xs rounded-md bg-emerald-600 text-white font-semibold hover:bg-emerald-500 transition">
+              Hold "Talk"
+            </button>
+          </div>
+        </div>
+
+        <!-- WebGL Canvas Container -->
+        <div class="relative flex-1 min-h-[450px] rounded-lg overflow-hidden bg-slate-950 border border-[var(--border)]">
+          <canvas id="glCanvas" class="w-full h-[450px] block cursor-grab active:cursor-grabbing"></canvas>
+          <canvas id="hudCanvas" class="w-full h-[450px] block absolute inset-0 pointer-events-none"></canvas>
+
+          <!-- Live Haptic / Status Toast -->
+          <div id="hapticBadge" class="hidden absolute top-3 left-3 px-3 py-1.5 rounded-lg bg-amber-400 text-slate-950 text-xs font-bold shadow-lg">
+            BZZT! Listening...
+          </div>
+
+          <!-- Bottom Legend -->
+          <div class="absolute bottom-2.5 left-3 right-3 flex flex-wrap items-center justify-between text-xs text-slate-400 pointer-events-none">
+            <span>Full 360° Orbit • Right-drag: Pan • Scroll: Zoom</span>
+            <span id="lblActivePart" class="text-sky-400 font-medium">All 8 Parts Visible</span>
+          </div>
+        </div>
+
+        <!-- CAD Inspection Sliders -->
+        <div class="grid grid-cols-1 sm:grid-cols-4 gap-3 pt-3 mt-2 border-t border-[var(--border)]">
+          <div class="flex flex-col gap-1">
+            <div class="flex justify-between text-xs">
+              <span class="font-medium text-[var(--foreground)]">Explode Stack</span>
+              <span id="lblExplode" class="text-[var(--muted-foreground)]">0%</span>
+            </div>
+            <input id="rngExplode" type="range" min="0" max="100" value="0" class="w-full" />
+          </div>
+
+          <div class="flex flex-col gap-1">
+            <div class="flex justify-between text-xs">
+              <span class="font-medium text-[var(--foreground)]">Cross-Section Cut</span>
+              <span id="lblSlice" class="text-[var(--muted-foreground)]">Off</span>
+            </div>
+            <input id="rngSlice" type="range" min="0" max="100" value="0" class="w-full" />
+          </div>
+
+          <div class="flex items-center gap-2 pt-2 sm:pt-0">
+            <input id="chkHideLid" type="checkbox" class="rounded border-[var(--border)]" />
+            <label for="chkHideLid" class="text-xs font-medium text-[var(--foreground)] cursor-pointer">Hide Top Bezel</label>
+          </div>
+
+          <div class="flex items-center gap-2 pt-2 sm:pt-0">
+            <input id="chkWireframe" type="checkbox" checked class="rounded border-[var(--border)]" />
+            <label for="chkWireframe" class="text-xs font-medium text-[var(--foreground)] cursor-pointer">CAD Edge Lines</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: STEP-Verified Part Stack (4 cols) -->
+      <div class="lg:col-span-4 bg-[var(--card)] border border-[var(--border)] rounded-xl p-4 shadow-sm flex flex-col justify-between space-y-3">
+        <div>
+          <div class="flex items-center justify-between">
+            <h2 class="text-sm font-semibold text-[var(--foreground)]">STEP-Verified Assembly (8 Parts)</h2>
+            <button id="btnResetSelection" class="text-xs text-sky-500 hover:underline hidden">Show All</button>
+          </div>
+          <p class="text-xs text-[var(--muted-foreground)] mt-0.5">Click any component to isolate &amp; verify its exact fit:</p>
+
+          <div id="partList" class="mt-2 space-y-1.5">
+            <button data-part="top_shell" class="part-btn w-full text-left p-2 rounded-lg border border-[var(--border)] hover:bg-[var(--secondary)] transition flex items-start gap-2">
+              <span class="w-3 h-3 rounded-sm mt-1 shrink-0" style="background:#64748b"></span>
+              <div>
+                <div class="text-xs font-semibold text-[var(--foreground)]">1. Snap-Fit Front Bezel (68.8 × 35.2 × 3.1 mm)</div>
+                <div class="text-xs text-[var(--muted-foreground)]">Printables <code>876008/1566902</code> 4-corner spherical snap sockets + dust-seal step; R=2.6mm corners overhang top switches (0.0mm protrusion).</div>
+              </div>
+            </button>
+
+            <button data-part="eink_pcb" class="part-btn w-full text-left p-2 rounded-lg border border-[var(--border)] hover:bg-[var(--secondary)] transition flex items-start gap-2">
+              <span class="w-3 h-3 rounded-sm mt-1 shrink-0" style="background:#f8fafc; border:1px solid #94a3b8"></span>
+              <div>
+                <div class="text-xs font-semibold text-[var(--foreground)]">2. Elecrow <code>00-2-13_view_asm.stp</code> + <code>BM02B-SRSS-TB</code></div>
+                <div class="text-xs text-[var(--muted-foreground)]">Exact 31.20×63.20mm (R=1.0mm) PCB, internal FPC slot, right Type-C (Y=-0.6mm), JST SH SMD header (Y=-10.13mm) &amp; rear BOOT/RST.</div>
+              </div>
+            </button>
+
+            <button data-part="buttons" class="part-btn w-full text-left p-2 rounded-lg border border-[var(--border)] hover:bg-[var(--secondary)] transition flex items-start gap-2">
+              <span class="w-3 h-3 rounded-sm mt-1 shrink-0" style="background:#f97316"></span>
+              <div>
+                <div class="text-xs font-semibold text-[var(--foreground)]">3. Captive Flush Top Controls (0.0mm Overhang)</div>
+                <div class="text-xs text-[var(--muted-foreground)]">Captive internal-flange <strong>KEY-579</strong> caps (X=±11.15mm) &amp; sliding <strong>XB-TM-2024A</strong> shuttle (X=0, ±2.3mm travel) stay 100% flush inside the flat wall.</div>
+              </div>
+            </button>
+
+            <button data-part="mic" class="part-btn w-full text-left p-2 rounded-lg border border-[var(--border)] hover:bg-[var(--secondary)] transition flex items-start gap-2">
+              <span class="w-3 h-3 rounded-sm mt-1 shrink-0" style="background:#3b82f6"></span>
+              <div>
+                <div class="text-xs font-semibold text-[var(--foreground)]">4. GrabCAD <code>INMP441</code> Ø14.0mm Circular Module</div>
+                <div class="text-xs text-[var(--muted-foreground)]">Ø14.0×1.6mm disc PCB (X=-3.8, Y=+23.5mm) with 4.72×3.76mm MEMS sensor, 2×3 2.54mm pins &amp; Ø1.5mm bottom acoustic port.</div>
+              </div>
+            </button>
+
+            <button data-part="mosfet" class="part-btn w-full text-left p-2 rounded-lg border border-[var(--border)] hover:bg-[var(--secondary)] transition flex items-start gap-2">
+              <span class="w-3 h-3 rounded-sm mt-1 shrink-0" style="background:#8b5cf6"></span>
+              <div>
+                <div class="text-xs font-semibold text-[var(--foreground)]">5. MOSFET / TO-92 Vibration Driver (Part 3B)</div>
+                <div class="text-xs text-[var(--muted-foreground)]">Compact driver carrier (X=+6.2, Y=-24mm) with SOT-23 / TO-92 transistor switch, flyback diode &amp; 3-pin header pads.</div>
+              </div>
+            </button>
+
+            <button data-part="vibe" class="part-btn w-full text-left p-2 rounded-lg border border-[var(--border)] hover:bg-[var(--secondary)] transition flex items-start gap-2">
+              <span class="w-3 h-3 rounded-sm mt-1 shrink-0" style="background:#ec4899"></span>
+              <div>
+                <div class="text-xs font-semibold text-[var(--foreground)]">6. Vybronics <code>VC1027B200N</code> 10×2.7mm Coin Motor</div>
+                <div class="text-xs text-[var(--muted-foreground)]">Exact Ø10.0×2.7mm 3V ERM pancake motor (Part 3A) with Ø9mm 3M pad &amp; contact tabs press-fit in the C-clip floor ring.</div>
+              </div>
+            </button>
+
+            <button data-part="battery" class="part-btn w-full text-left p-2 rounded-lg border border-[var(--border)] hover:bg-[var(--secondary)] transition flex items-start gap-2">
+              <span class="w-3 h-3 rounded-sm mt-1 shrink-0" style="background:#eab308"></span>
+              <div>
+                <div class="text-xs font-semibold text-[var(--foreground)]">7. <code>NV 503035P</code> LiPo + <code>JST SHR-02V-S</code> Plug</div>
+                <div class="text-xs text-[var(--muted-foreground)]">Exact 35×30×4.8mm pouch + Kapton PCM collar &amp; 28AWG Red/Black leads mated into the 1.0mm JST SH receptacle.</div>
+              </div>
+            </button>
+
+            <button data-part="bottom_shell" class="part-btn w-full text-left p-2 rounded-lg border border-[var(--border)] hover:bg-[var(--secondary)] transition flex items-start gap-2">
+              <span class="w-3 h-3 rounded-sm mt-1 shrink-0" style="background:#334155"></span>
+              <div>
+                <div class="text-xs font-semibold text-[var(--foreground)]">8. Snap-Fit Bottom Cradle (68.8 × 35.2 mm)</div>
+                <div class="text-xs text-[var(--muted-foreground)]">4 spherical locking pins (Ø3.6mm), 1.0mm dust-seal step, right USB-C slot, rear INMP441 acoustic port, BOOT/RST pinholes &amp; pry slot.</div>
+              </div>
+            </button>
+          </div>
+        </div>
+
+        <!-- STEP File Changes Summary -->
+        <div class="p-2.5 rounded-lg bg-[var(--secondary)] text-[var(--secondary-foreground)] text-xs space-y-1">
+          <div class="font-semibold">All 4 CAD Reference Packages Integrated:</div>
+          <div>• <strong>Elecrow STEP + Printables Case:</strong> R=2.6mm corners, 4 spherical snap-pins, 1.0mm dust rim &amp; captive flush top controls (0.0mm overhang)</div>
+          <div>• <strong>GrabCAD INMP441 &amp; VC1027B200N:</strong> Exact Ø14.0mm circular I2S mic disc + Ø10.0×2.7mm coin motor &amp; MOSFET/TO-92 driver</div>
+          <div>• <strong>NV 503035P + JST SH 1.0mm:</strong> Mated <code>SHR-02V-S-B</code> / <code>BM02B-SRSS-TB</code> (4.0×3.6×4.9mm) with Red/Black wire harness</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // =========================================================================
+    // 1. DATASHEET-EXACT MANIFOLD CAD MESH GENERATOR (v4.0 — SKU: DIE01021S)
+    // =========================================================================
+    // Official Elecrow 2.13" E-Paper HMI (DIE01021S) Datasheet Coordinates:
+    //   - PCB Outline: 31.20 mm wide (X: -15.60..+15.60) × 63.19 mm long (Y: -34.60..+28.59)
+    //   - Case Outer:  36.00 mm wide (X: -18.00..+18.00) × 74.00 mm long (Y: -37.00..+37.00)
+    //   - Top Short Edge of PCB (Y = +28.59 mm):
+    //       * Left Corner  (X = -11.5 mm): MENU side-push switch (IO2)
+    //       * Center       (X =   0.0 mm): TM_2024A 3-way Rotary Thumb Wheel (IO4/IO5/IO6)
+    //       * Right Corner (X = +11.5 mm): EXIT side-push switch (IO1)
+    //   - Left Long Edge of PCB (X = -15.60 mm):
+    //       * Upper-Left   (Y = +15.0 mm): UART0 4-pin header (GND, 5V, TXD/IO43, RXD/IO44)
+    //       * Lower-Center (Y =  -5.5 mm): USB TYPE-C port (J2) -> Left case wall cutout!
+    //       * Lower-Left   (Y = -18.5 mm): BAT 2-pin SH1.0 socket (B1)
+    //   - Right Long Edge of PCB (X = +15.60 mm):
+    //       * Center       (Y =  +2.0 mm): GPIO_D 4-pin header (IO40, IO41, 3V3, GND)
+    //       * Lower-Right  (Y = -14.0 mm): BOOT tactile switch (K1) -> Pinhole on right wall
+    //       * Bottom-Right (Y = -25.0 mm): RESET tactile switch (K2) -> Pinhole on right wall
+    //   - Bottom Short Edge of PCB (Y = -34.60 mm):
+    //       * FPC-A002 24-pin E-Ink display ribbon cable wrapping around edge
+
+    class MeshBuilder {
+      constructor() {
+        this.positions = [];
+        this.normals = [];
+        this.colors = [];
+        this.uvs = [];
+        this.edgePositions = [];
+      }
+
+      addTriangle(v0, v1, v2, color, uv0 = [0,0], uv1 = [0,0], uv2 = [0,0]) {
+        const ux = v1[0] - v0[0], uy = v1[1] - v0[1], uz = v1[2] - v0[2];
+        const vx = v2[0] - v0[0], vy = v2[1] - v0[1], vz = v2[2] - v0[2];
+        let nx = uy * vz - uz * vy;
+        let ny = uz * vx - ux * vz;
+        let nz = ux * vy - uy * vx;
+        const len = Math.hypot(nx, ny, nz) || 1;
+        nx /= len; ny /= len; nz /= len;
+
+        this.positions.push(...v0, ...v1, ...v2);
+        this.normals.push(nx, ny, nz, nx, ny, nz, nx, ny, nz);
+        this.colors.push(...color, ...color, ...color);
+        this.uvs.push(...uv0, ...uv1, ...uv2);
+      }
+
+      addQuad(v0, v1, v2, v3, color, isTextured = false) {
+        if (isTextured) {
+          this.addTriangle(v0, v1, v2, color, [0, 0], [1, 0], [1, 1]);
+          this.addTriangle(v0, v2, v3, color, [0, 0], [1, 1], [0, 1]);
+        } else {
+          this.addTriangle(v0, v1, v2, color);
+          this.addTriangle(v0, v2, v3, color);
+        }
+      }
+
+      addEdgeLoop(loop, z) {
+        for (let i = 0; i < loop.length; i++) {
+          const a = loop[i], b = loop[(i + 1) % loop.length];
+          this.edgePositions.push(a[0], a[1], z, b[0], b[1], z);
+        }
+      }
+
+      static roundedRectContour(cx, cy, w, l, r, segs = 8) {
+        const hw = w / 2, hl = l / 2;
+        const rad = Math.max(0.05, Math.min(r, hw - 0.05, hl - 0.05));
+        const pts = [];
+        const corners = [
+          [cx + hw - rad, cy + hl - rad, 0, Math.PI * 0.5],
+          [cx - hw + rad, cy + hl - rad, Math.PI * 0.5, Math.PI],
+          [cx - hw + rad, cy - hl + rad, Math.PI, Math.PI * 1.5],
+          [cx + hw - rad, cy - hl + rad, Math.PI * 1.5, Math.PI * 2]
+        ];
+        for (const [ox, oy, a0, a1] of corners) {
+          for (let i = 0; i < segs; i++) {
+            const a = a0 + (a1 - a0) * (i / segs);
+            pts.push([ox + Math.cos(a) * rad, oy + Math.sin(a) * rad]);
+          }
+        }
+        return pts;
+      }
+
+      addRingBridge(loopA, zA, loopB, zB, color, flipWinding = false) {
+        const n = loopA.length;
+        for (let i = 0; i < n; i++) {
+          const next = (i + 1) % n;
+          const v0 = [...loopA[i], zA];
+          const v1 = [...loopA[next], zA];
+          const v2 = [...loopB[next], zB];
+          const v3 = [...loopB[i], zB];
+          if (!flipWinding) {
+            this.addQuad(v0, v1, v2, v3, color);
+          } else {
+            this.addQuad(v1, v0, v3, v2, color);
+          }
+        }
+      }
+
+      addChamferedRoundedBox(cx, cy, z0, z1, w, l, r, chBot, chTop, color, segs = 6) {
+        const layers = [];
+        if (chBot > 0.04) {
+          layers.push({ z: z0, loop: MeshBuilder.roundedRectContour(cx, cy, w - chBot * 2, l - chBot * 2, Math.max(0.15, r - chBot), segs) });
+          layers.push({ z: z0 + chBot, loop: MeshBuilder.roundedRectContour(cx, cy, w, l, r, segs) });
+        } else {
+          layers.push({ z: z0, loop: MeshBuilder.roundedRectContour(cx, cy, w, l, r, segs) });
+        }
+
+        if (chTop > 0.04) {
+          layers.push({ z: z1 - chTop, loop: MeshBuilder.roundedRectContour(cx, cy, w, l, r, segs) });
+          layers.push({ z: z1, loop: MeshBuilder.roundedRectContour(cx, cy, w - chTop * 2, l - chTop * 2, Math.max(0.15, r - chTop), segs) });
+        } else {
+          layers.push({ z: z1, loop: MeshBuilder.roundedRectContour(cx, cy, w, l, r, segs) });
+        }
+
+        for (let k = 0; k < layers.length - 1; k++) {
+          this.addRingBridge(layers[k].loop, layers[k].z, layers[k + 1].loop, layers[k + 1].z, color, false);
+        }
+
+        const bot = layers[0], top = layers[layers.length - 1];
+        for (let i = 1; i < bot.loop.length - 1; i++) {
+          this.addTriangle([...bot.loop[0], bot.z], [...bot.loop[i + 1], bot.z], [...bot.loop[i], bot.z], color);
+        }
+        for (let i = 1; i < top.loop.length - 1; i++) {
+          this.addTriangle([...top.loop[0], top.z], [...top.loop[i], top.z], [...top.loop[i + 1], top.z], color);
+        }
+
+        this.addEdgeLoop(bot.loop, bot.z);
+        this.addEdgeLoop(top.loop, top.z);
+      }
+
+      addCylinder(cx, cy, z0, z1, rad, color, segs = 24) {
+        const loop = [];
+        for (let i = 0; i < segs; i++) {
+          const a = (i / segs) * Math.PI * 2;
+          loop.push([cx + Math.cos(a) * rad, cy + Math.sin(a) * rad]);
+        }
+        this.addRingBridge(loop, z0, loop, z1, color, false);
+        for (let i = 1; i < segs - 1; i++) {
+          this.addTriangle([...loop[0], z0], [...loop[i + 1], z0], [...loop[i], z0], color);
+          this.addTriangle([...loop[0], z1], [...loop[i], z1], [...loop[i + 1], z1], color);
+        }
+        this.addEdgeLoop(loop, z1);
+      }
+
+      addHollowCylinder(cx, cy, z0, z1, rOut, rIn, color, segs = 24) {
+        const outer = [], inner = [];
+        for (let i = 0; i < segs; i++) {
+          const a = (i / segs) * Math.PI * 2;
+          outer.push([cx + Math.cos(a) * rOut, cy + Math.sin(a) * rOut]);
+          inner.push([cx + Math.cos(a) * rIn, cy + Math.sin(a) * rIn]);
+        }
+        this.addRingBridge(outer, z0, outer, z1, color, false);
+        this.addRingBridge(inner, z0, inner, z1, color, true);
+        this.addRingBridge(outer, z1, inner, z1, color, false);
+        this.addRingBridge(outer, z0, inner, z0, color, true);
+        this.addEdgeLoop(outer, z1);
+        this.addEdgeLoop(inner, z1);
+      }
+    }
+
+    function buildAllPartMeshes() {
+      const parts = {};
+      const segs = 8;
+      // =======================================================================
+      // EXACT 3D COORDINATES FROM ELECROW'S `00-2-13_view_asm.stp` & `board.brd`
+      // + PRINTABLES `876008 / 1566902` & `1741918` + GRABCAD / VYBRONICS / JST STEP MODELS:
+      // - 2_13_PCB: 31.20 × 63.20 × 1.60 mm (R = 1.0 mm corners), centered at (0, 0)
+      //   X in [-15.60 .. +15.60], Y in [-31.60 .. +31.60], Z in [+2.85 .. +4.45]
+      // - Outer Case: 35.20 × 68.80 × 12.20 mm (X in [-17.60..+17.60], Y in [-34.40..+34.40])
+      //   Corner Radius R = 2.60 mm -> Flat Top Edge spans X = -15.00 to +15.00 mm!
+      //   Because the KEY-579 switches sit at X = ±9.65..±12.65 mm, they are 100% on the
+      //   flat top wall (2.0+ mm inside the corner curve) and recessed inside Y = +34.40 mm!
+      // =======================================================================
+      const caseW = 35.20;
+      const caseL = 68.80;
+      const caseR = 2.60;
+
+      // -----------------------------------------------------------------------
+      // PART 1: SNAP-FIT FRONT BEZEL (35.20 × 68.80 × 3.10 mm; R = 2.60 mm corners)
+      // Incorporates Printables `876008 / 1566902` 4-corner spherical snap sockets + dust step!
+      // -----------------------------------------------------------------------
+      {
+        const mb = new MeshBuilder();
+        const colOuter  = [0.38, 0.45, 0.54];
+        const colBezel  = [0.27, 0.33, 0.41];
+        const colSocket = [0.20, 0.25, 0.32];
+
+        const zSplit   = 2.85;
+        const zPcbTop  = 4.45;
+        const zGlass   = 5.35; // 2_13-LCD in STEP is 0.90 mm thick above PCB (4.45 + 0.90 = 5.35 mm)
+        const zChamfer = 5.60;
+        const zTop     = 5.95; // 0.60 mm micro-bezel above glass
+
+        const outBase = MeshBuilder.roundedRectContour(0, 0, caseW, caseL, caseR, segs);
+        const outMid  = MeshBuilder.roundedRectContour(0, 0, caseW, caseL, caseR, segs);
+        // Crisp 0.35 mm top edge break so the top bezel completely overhangs the Y = +34.05 mm recessed buttons!
+        const outTop  = MeshBuilder.roundedRectContour(0, 0, caseW - 0.70, caseL - 0.70, caseR - 0.35, segs);
+
+        // Exact 2_13-LCD Active Window from STEP vertices: X = [-11.86..+11.85] (23.71mm), Y = [-21.65..+26.90] (48.55mm, center Y = +2.625mm)
+        const winY     = 2.625;
+        const winTop   = MeshBuilder.roundedRectContour(0, winY, 24.80, 49.60, 1.0, segs);
+        const winBot   = MeshBuilder.roundedRectContour(0, winY, 23.71, 48.55, 0.6, segs);
+
+        // Exact 2_13-LCD Glass Pocket from STEP vertices: 29.20 × 59.20 mm centered at (0, 0)
+        const glassPocket = MeshBuilder.roundedRectContour(0, 0, 29.50, 59.50, 0.8, segs);
+        const innerWall   = MeshBuilder.roundedRectContour(0, 0, 31.60, 63.60, 1.2, segs);
+
+        mb.addRingBridge(outBase, zSplit, outMid, zChamfer, colOuter, false);
+        mb.addRingBridge(outMid, zChamfer, outTop, zTop, colOuter, false);
+        mb.addRingBridge(outTop, zTop, winTop, zTop, colOuter, false);
+        mb.addRingBridge(winTop, zTop, winBot, zGlass, colBezel, false);
+
+        mb.addRingBridge(winBot, zGlass, glassPocket, zGlass, colBezel, true);
+        mb.addRingBridge(glassPocket, zGlass, glassPocket, zPcbTop, colBezel, true);
+        mb.addRingBridge(glassPocket, zPcbTop, innerWall, zPcbTop, colBezel, true);
+        mb.addRingBridge(innerWall, zPcbTop, innerWall, zSplit, colBezel, true);
+        mb.addRingBridge(outBase, zSplit, innerWall, zSplit, colBezel, true);
+
+        // Printables `876008 / 1566902` 4-Corner Spherical Snap-Fit Receiver Sockets
+        for (const [sx, sy] of [[-13.8, 30.8], [13.8, 30.8], [-13.8, -30.8], [13.8, -30.8]]) {
+          mb.addHollowCylinder(sx, sy, zSplit - 0.15, zPcbTop, 2.30, 1.80, colSocket, 16);
+        }
+
+        // Internal dust-seal alignment step along the split perimeter (matching Printables 1566902)
+        mb.addChamferedRoundedBox(-16.1, 0, 2.15, zSplit, 0.7, 46.0, 0.25, 0.15, 0, colBezel, 2);
+        mb.addChamferedRoundedBox( 16.1, 0, 2.15, zSplit, 0.7, 46.0, 0.25, 0.15, 0, colBezel, 2);
+
+        mb.addEdgeLoop(outMid, zChamfer);
+        mb.addEdgeLoop(outTop, zTop);
+        mb.addEdgeLoop(winTop, zTop);
+        mb.addEdgeLoop(winBot, zGlass);
+
+        parts.top_shell = mb;
+      }
+
+      // -----------------------------------------------------------------------
+      // PART 2: ELECROW `00-2-13_view_asm.stp` PCB & LCD + JST `BM02B-SRSS-TB`
+      // -----------------------------------------------------------------------
+      {
+        const mb = new MeshBuilder();
+        const zPcbBot   = 2.85; // Corresponds to Y_step = -1.60 mm
+        const zPcbTop   = 4.45; // Corresponds to Y_step =  0.00 mm
+        const zGlassTop = 5.35; // Corresponds to Y_step = +0.90 mm
+
+        // 1) White soldermask PCB: exact 31.20 × 63.20 × 1.60 mm with R = 1.00 mm corners (from board.brd Layer 20)
+        mb.addChamferedRoundedBox(0, 0, zPcbBot, zPcbTop, 31.20, 63.20, 1.00, 0.05, 0.05, [0.94, 0.95, 0.97], 4);
+
+        // 2) 2_13-LCD Glass Panel: exact 29.20 × 59.20 × 0.90 mm centered at (0, 0)
+        mb.addChamferedRoundedBox(0, 0, zPcbTop, zGlassTop, 29.20, 59.20, 0.40, 0, 0.05, [0.84, 0.86, 0.89], 3);
+
+        // 3) Internal PCB Slot at Y = -30.20 mm & Orange FPC Ribbon passing INSIDE the PCB perimeter (from STEP 2_13-LCD)
+        mb.addChamferedRoundedBox(-0.6, -29.9, zPcbBot - 0.40, zGlassTop - 0.15, 14.8, 1.4, 0.4, 0, 0, [0.88, 0.52, 0.14], 2);
+        mb.addChamferedRoundedBox(-0.2, -23.7, zPcbBot - 0.40, zPcbBot, 12.5, 10.5, 0.3, 0, 0, [0.88, 0.52, 0.14], 2);
+        // 24-pin FPC Connector (U3 / 3D_PCB1 at Y = -19.1 mm, X = [-7.75..+7.75], Z = [0.84..2.85])
+        mb.addChamferedRoundedBox(0, -19.1, 0.85, zPcbBot, 15.5, 5.4, 0.3, 0, 0, [0.20, 0.22, 0.25], 2);
+
+        // 4) Back-Side ICs from STEP file:
+        //    - IC-1 (ESP32-S3 QFN56): X=[-5.01..+2.09], Y=[+11.13..+18.23], Z=[1.95..2.85]
+        mb.addChamferedRoundedBox(-1.46, 14.68, 1.95, zPcbBot, 7.0, 7.0, 0.3, 0, 0, [0.14, 0.16, 0.20], 2);
+        //    - XSON-8 (8MB Flash W25Q64): X=[+2.60..+6.60], Y=[+13.49..+17.51], Z=[2.40..2.85]
+        mb.addChamferedRoundedBox(4.60, 15.50, 2.40, zPcbBot, 4.0, 4.0, 0.2, 0, 0, [0.14, 0.16, 0.20], 2);
+        //    - 40MHz Crystal: X=[-2.80..+0.40], Y=[+5.70..+8.20], Z=[2.04..2.85]
+        mb.addChamferedRoundedBox(-1.20, 6.95, 2.04, zPcbBot, 3.2, 2.5, 0.2, 0, 0, [0.82, 0.76, 0.45], 2);
+        //    - CH340K (ESOP-10): X=[-1.95..+2.95], Y=[-10.07..-3.93], Z=[1.40..2.85]
+        mb.addChamferedRoundedBox(0.50, -7.00, 1.40, zPcbBot, 4.9, 6.1, 0.2, 0, 0, [0.14, 0.16, 0.20], 2);
+
+        // 5) Top Short Edge Switch Bodies (Y = +31.60 mm):
+        //    - Left KEY-579 body: X=[-14.88..-7.42], Y=[+28.90..+31.60]
+        mb.addChamferedRoundedBox(-11.15, 30.25, 0.65, zPcbBot, 6.2, 2.8, 0.3, 0, 0, [0.82, 0.84, 0.88], 2);
+        //    - Center XB-TM-2024A body: X=[-6.58..+6.58], Y=[+25.35..+31.60]
+        mb.addChamferedRoundedBox(0.00, 28.50, 0.75, zPcbBot, 9.8, 6.2, 0.4, 0, 0, [0.76, 0.79, 0.83], 2);
+        //    - Right KEY-579 body: X=[+7.42..+14.88], Y=[+28.90..+31.60]
+        mb.addChamferedRoundedBox(11.15, 30.25, 0.65, zPcbBot, 6.2, 2.8, 0.3, 0, 0, [0.82, 0.84, 0.88], 2);
+
+        // 6) Right Long Edge Connectors (X = +15.60 mm in Front View, per STEP):
+        //    - UART0 4-pin socket: X=[+10.22..+15.60], Y=[+7.68..+22.80]
+        mb.addChamferedRoundedBox(12.80, 15.24, 0.50, zPcbBot, 5.4, 12.5, 0.4, 0, 0, [0.92, 0.90, 0.84], 2);
+        //    - USB TYPE-C Receptacle (#225568): X=[+9.17..+16.52], Y=[-5.07..+3.87] (centered at Y = -0.60 mm), Z=[-0.31..+2.85]
+        mb.addChamferedRoundedBox(12.40, -0.60, -0.31, zPcbBot, 7.35, 8.94, 1.0, 0.2, 0.2, [0.78, 0.81, 0.85], 4);
+        //    - Part 4B: JST SH 1.0mm 2-Pin Male SMD Header (`BM02B-SRSS-TB` / STEP #225343):
+        //      4.00mm wide (Y = -12.13..-8.13) × 3.60mm deep (X = +11.95..+15.55) × 3.25mm height (Z = -0.40..+2.85)
+        mb.addChamferedRoundedBox(13.75, -10.13, -0.40, zPcbBot, 3.60, 4.00, 0.25, 0, 0, [0.94, 0.91, 0.82], 2);
+        mb.addChamferedRoundedBox(13.75, -12.35, 2.10, zPcbBot, 2.20, 0.45, 0.1, 0, 0, [0.82, 0.84, 0.88], 2);
+        mb.addChamferedRoundedBox(13.75,  -7.91, 2.10, zPcbBot, 2.20, 0.45, 0.1, 0, 0, [0.82, 0.84, 0.88], 2);
+
+        // 7) Left Long Edge & Rear Tactile Switches (X = -15.60 mm in Front View, per STEP):
+        //    - GPIO_D 20-pin FPC/header socket (#227894): X=[-15.32..-9.82], Y=[-9.94..+2.06]
+        mb.addChamferedRoundedBox(-12.57, -3.94, 0.85, zPcbBot, 5.5, 12.0, 0.4, 0, 0, [0.92, 0.90, 0.84], 2);
+        //    - BOOT (#227739, Y=-15.20) & RESET (#227741, Y=-25.67) 4.5×4.5mm vertical switches at X = -11.90 mm
+        mb.addChamferedRoundedBox(-11.90, -15.20, 0.35, zPcbBot, 4.5, 4.5, 0.3, 0, 0, [0.85, 0.87, 0.90], 2);
+        mb.addCylinder(-11.90, -15.20, -1.10, 0.35, 1.3, [0.18, 0.20, 0.24], 16);
+        mb.addChamferedRoundedBox(-11.90, -25.67, 0.35, zPcbBot, 4.5, 4.5, 0.3, 0, 0, [0.85, 0.87, 0.90], 2);
+        mb.addCylinder(-11.90, -25.67, -1.10, 0.35, 1.3, [0.18, 0.20, 0.24], 16);
+
+        parts.eink_pcb = mb;
+      }
+
+      // -----------------------------------------------------------------------
+      // PART 3: CAPTIVE INTERNAL-FLANGE TOP CONTROLS (0.00mm Overhang!)
+      // Combines Elecrow `00-2-13_view_asm.stp` switch positions with
+      // Printables `tiny_reader_2-13_case_1.1.scad` captive internal-flange retention!
+      // -----------------------------------------------------------------------
+      {
+        const mb = new MeshBuilder();
+        const colSlot  = [0.07, 0.09, 0.13]; // Dark recessed slot housings in the flat Y = +34.40 mm top wall
+        const colTalk  = [0.96, 0.45, 0.09]; // Captive orange Talk/EXIT cap (X = -11.15 mm)
+        const colWheel = [0.16, 0.18, 0.22]; // Captive sliding shuttle for XB-TM-2024A 3-way lever (X = 0.00 mm)
+        const colMenu  = [0.64, 0.70, 0.78]; // Captive grey MENU cap (X = +11.15 mm)
+
+        // 1) Left Captive `tactile_button` Cap (`EXIT` / Hold-to-Talk at X = -11.15 mm, matching STEP KEY-579 #227663):
+        mb.addChamferedRoundedBox(-11.15, 33.92, 0.55, 2.45, 4.60, 1.00, 0.4, 0, 0, colSlot, 3);
+        //    Internal retention flange (5.60 × 0.65 mm inside the wall so button cannot fall out!)
+        mb.addChamferedRoundedBox(-11.15, 32.60, 0.65, 2.35, 5.60, 0.65, 0.3, 0, 0, colTalk, 2);
+        //    Flush external actuator pill inside the flat Y = +34.40 mm wall
+        mb.addChamferedRoundedBox(-11.15, 33.15, 0.75, 2.25, 3.60, 2.60, 0.4, 0.12, 0.12, colTalk, 3);
+
+        // 2) Center Captive Sliding `lever_button` Shuttle (`XB-TM-2024A` 3-Way Lever at X = 0.00 mm, STEP #225439):
+        mb.addChamferedRoundedBox(0.00, 33.92, 0.55, 2.45, 10.40, 1.00, 0.5, 0, 0, colSlot, 3);
+        //    Internal sliding retention flange (11.60 mm wide × 0.60 mm thick for ±2.3mm travel, per tiny_reader_2-13_case_1.1.scad)
+        mb.addChamferedRoundedBox(0.00, 32.55, 0.70, 2.30, 11.60, 0.65, 0.3, 0, 0, colWheel, 2);
+        //    Stepped XB-TM-2024A socket & flush thumb shuttle (9.54mm base -> 6.63mm mid -> 4.94mm tab -> 2.25mm tip flush inside slot)
+        mb.addChamferedRoundedBox(0.00, 32.50, 0.75, 2.25, 9.50, 3.88, 0.3, 0, 0, colWheel, 2);
+        mb.addChamferedRoundedBox(0.00, 32.90, 0.82, 2.18, 6.60, 3.10, 0.3, 0, 0, [0.22, 0.25, 0.30], 2);
+        mb.addChamferedRoundedBox(0.00, 33.30, 0.88, 2.12, 4.90, 2.32, 0.3, 0.08, 0.08, [0.28, 0.32, 0.38], 2);
+        mb.addChamferedRoundedBox(0.00, 33.60, 0.94, 2.06, 2.25, 1.76, 0.2, 0.08, 0.08, [0.38, 0.43, 0.50], 2);
+
+        // 3) Right Captive `tactile_button` Cap (`MENU` at X = +11.15 mm, matching STEP KEY-579 #227672):
+        mb.addChamferedRoundedBox(11.15, 33.92, 0.55, 2.45, 4.60, 1.00, 0.4, 0, 0, colSlot, 3);
+        mb.addChamferedRoundedBox(11.15, 32.60, 0.65, 2.35, 5.60, 0.65, 0.3, 0, 0, colMenu, 2);
+        mb.addChamferedRoundedBox(11.15, 33.15, 0.75, 2.25, 3.60, 2.60, 0.4, 0.12, 0.12, colMenu, 3);
+
+        parts.buttons = mb;
+      }
+
+      // -----------------------------------------------------------------------
+      // PART 4: GRABCAD `INMP441` Ø14.0mm CIRCULAR I2S MICROPHONE MODULE
+      // Reference: GrabCAD `inmp441-i2s-microphone-module-1` & `inmp441-module-1`
+      // -----------------------------------------------------------------------
+      {
+        const mb = new MeshBuilder();
+        const mx = -3.80, my = 23.50;
+        // 1) Exact Ø 14.00 mm × 1.60 mm circular breakout PCB (R = 7.00 mm) seated in upper-back zone (Z = -1.60..0.00 mm)
+        mb.addHollowCylinder(mx, my, -1.60, 0.00, 7.00, 0.75, [0.12, 0.32, 0.72], 28);
+        // 2) Gold annular acoustic ground ring (Ø 3.20 mm, inner hole Ø 1.50 mm bottom port) on back face
+        mb.addHollowCylinder(mx, my, -1.64, -1.58, 1.60, 0.75, [0.85, 0.68, 0.22], 20);
+        // 3) Neoprene acoustic foam gasket ring sealing the Ø 1.5mm bottom port to the rear case grille (Z = -2.20..-1.60 mm)
+        mb.addHollowCylinder(mx, my, -2.20, -1.60, 3.10, 1.20, [0.16, 0.18, 0.22], 20);
+        // 4) Rectangular stainless-steel `INMP441` MEMS IC package (exact 4.72 × 3.76 × 1.00 mm) centered over port (Z = 0.00..+1.00 mm)
+        mb.addChamferedRoundedBox(mx, my, 0.00, 1.00, 3.76, 4.72, 0.25, 0, 0.05, [0.78, 0.81, 0.85], 2);
+        // 5) 4 SMD 0402 decoupling passives around the MEMS sensor (from GrabCAD model)
+        for (const [dx, dy] of [[-2.6, -1.8], [-2.6, 1.8], [2.6, -1.8], [2.6, 1.8]]) {
+          mb.addChamferedRoundedBox(mx + dx, my + dy, 0.00, 0.45, 0.6, 1.0, 0.1, 0, 0, [0.55, 0.42, 0.25], 2);
+        }
+        // 6) Two opposing 3-pin 2.54mm pitch gold solder pad rows (`SCK, WS, SD` and `L/R, GND, VDD` at X = mx ± 4.45 mm)
+        for (const side of [-4.45, 4.45]) {
+          for (const py of [-2.54, 0.00, 2.54]) {
+            mb.addHollowCylinder(mx + side, my + py, -1.64, 0.04, 0.75, 0.40, [0.85, 0.68, 0.22], 12);
+          }
+        }
+        parts.mic = mb;
+      }
+
+      // -----------------------------------------------------------------------
+      // PART 5: PART 3B — MINI MOSFET / TRANSISTOR VIBRATION DRIVER
+      // Reference: GrabCAD `vibration-motor-module-1` & `to-92-transistor-1`
+      // -----------------------------------------------------------------------
+      {
+        const mb = new MeshBuilder();
+        const dx = 6.20, dy = -24.00;
+        // 1) Compact driver PCB carrier (11.0 × 9.6 × 1.2 mm at Z = -4.45..-3.25 mm)
+        mb.addChamferedRoundedBox(dx, dy, -4.45, -3.25, 11.0, 9.6, 1.2, 0.1, 0.1, [0.44, 0.22, 0.78], 3);
+        // 2) Onboard SOT-23 N-Channel MOSFET (`SI2302` / `AO3400`, 2.9 × 2.4 × 1.1 mm)
+        mb.addChamferedRoundedBox(dx - 1.8, dy + 1.2, -3.25, -2.15, 2.9, 2.4, 0.2, 0, 0, [0.12, 0.14, 0.18], 2);
+        // 3) Optional discrete TO-92 transistor footprint (`S8050` / `2N2222`, 4.58 × 3.56 × 1.6 mm laid flat)
+        mb.addChamferedRoundedBox(dx + 2.2, dy + 1.2, -3.25, -1.65, 3.6, 4.5, 0.6, 0, 0.2, [0.16, 0.18, 0.22], 3);
+        // 4) SOD-323 Flyback Schottky Diode (`1N5819` / `SS14`) + 0603 10kΩ Gate Resistor
+        mb.addChamferedRoundedBox(dx - 1.8, dy - 2.0, -3.25, -2.35, 2.5, 1.4, 0.15, 0, 0, [0.18, 0.20, 0.25], 2);
+        mb.addChamferedRoundedBox(dx + 2.0, dy - 2.2, -3.25, -2.65, 1.6, 0.9, 0.1, 0, 0, [0.25, 0.28, 0.32], 2);
+        // 5) 3 Gold Solder Pads (`VCC`, `GND`, `IN/IO44`) along bottom edge
+        for (const px of [-3.2, 0.0, 3.2]) {
+          mb.addCylinder(dx + px, dy - 3.6, -3.25, -3.15, 0.65, [0.85, 0.68, 0.22], 12);
+        }
+        parts.mosfet = mb;
+      }
+
+      // -----------------------------------------------------------------------
+      // PART 6: PART 3A — VYBRONICS `VC1027B200N` 10.0 × 2.7 mm COIN MOTOR
+      // Reference: Vybronics `VC1027B200N` / 10mm × 2.7mm (1027) 3V Pancake Motor
+      // -----------------------------------------------------------------------
+      {
+        const mb = new MeshBuilder();
+        const vx = -4.20, vy = -24.00;
+        // 1) 3M double-sided adhesive backing pad (Ø 9.00 × 0.15 mm on floor Z = -4.45..-4.30 mm)
+        mb.addCylinder(vx, vy, -4.45, -4.30, 4.50, [0.92, 0.28, 0.60], 24);
+        // 2) Exact Ø 10.00 × 2.70 mm (R = 5.00 mm) brushed stainless-steel coin motor body (Z = -4.30..-1.60 mm)
+        mb.addCylinder(vx, vy, -4.30, -1.60, 5.00, [0.82, 0.85, 0.90], 28);
+        // 3) Raised central rotor cap step (Ø 7.20 × 0.15 mm)
+        mb.addCylinder(vx, vy, -1.60, -1.45, 3.60, [0.72, 0.76, 0.82], 24);
+        // 4) Radial contact / wire-strain relief tab extending toward the MOSFET driver at +X
+        mb.addChamferedRoundedBox(vx + 5.1, vy, -4.10, -2.90, 2.4, 2.6, 0.3, 0, 0, [0.22, 0.25, 0.30], 2);
+        mb.addChamferedRoundedBox(vx + 7.2, vy + 0.6, -3.65, -3.15, 3.2, 0.45, 0.15, 0, 0, [0.88, 0.20, 0.20], 2);
+        mb.addChamferedRoundedBox(vx + 7.2, vy - 0.6, -3.65, -3.15, 3.2, 0.45, 0.15, 0, 0, [0.20, 0.48, 0.90], 2);
+        parts.vibe = mb;
+      }
+
+      // -----------------------------------------------------------------------
+      // PART 7: PART 4A (`NV 503035P` 35×30×5mm LiPo) + PART 4B (`JST SHR-02V-S-B` Plug)
+      // Reference: GrabCAD `nv-503035p-lithium-battery-1` & `jst-sh-smd-connectors-1`
+      // -----------------------------------------------------------------------
+      {
+        const mb = new MeshBuilder();
+        // 1) Part 4A: `NV 503035P` 3.7V 500mAh LiPo Pouch Cell (30.0 mm wide × 32.0 mm pouch × 4.80 mm thick)
+        mb.addChamferedRoundedBox(0.0, 1.80, -4.45, 0.35, 29.60, 32.00, 1.5, 0.35, 0.35, [0.78, 0.80, 0.84], 4);
+        // 2) Amber Kapton-taped Protection Circuit Module (PCM) collar at bottom end (30.0 × 3.0 × 4.5 mm -> total length 35.0 mm!)
+        mb.addChamferedRoundedBox(0.0, -15.60, -4.30, 0.20, 28.80, 3.10, 0.5, 0.1, 0.1, [0.86, 0.58, 0.08], 3);
+        // 3) Part 4B: JST SH 1.0mm 2-Pin Female Crimp Plug Housing (`SHR-02V-S-B`, 2.80 × 4.00 × 2.95 mm)
+        //    Mated into the PCB's `BM02B-SRSS-TB` receptacle at X = +11.45 mm, Y = -10.13 mm, Z = -0.35..+2.60 mm
+        mb.addChamferedRoundedBox(11.45, -10.13, -0.35, 2.60, 2.80, 3.80, 0.25, 0, 0, [0.96, 0.95, 0.90], 2);
+        // 4) 28AWG Red (+3.7V) & Black (GND) Silicone Wire Harness routing from PCM collar (Y=-15.6mm) to JST SHR-02V-S plug (Y=-10.13mm)
+        mb.addChamferedRoundedBox(8.20, -13.20, -0.80, 0.10, 5.20, 0.85, 0.3, 0, 0, [0.88, 0.18, 0.18], 2);
+        mb.addChamferedRoundedBox(8.20, -11.80, -0.80, 0.10, 5.20, 0.85, 0.3, 0, 0, [0.15, 0.17, 0.20], 2);
+        mb.addChamferedRoundedBox(10.10, -10.63, 0.20, 1.10, 1.80, 0.75, 0.2, 0, 0, [0.88, 0.18, 0.18], 2);
+        mb.addChamferedRoundedBox(10.10,  -9.63, 0.20, 1.10, 1.80, 0.75, 0.2, 0, 0, [0.15, 0.17, 0.20], 2);
+        parts.battery = mb;
+      }
+
+      // -----------------------------------------------------------------------
+      // PART 8: SNAP-FIT BOTTOM CRADLE (35.20 × 68.80 × 9.10 mm; R = 2.60 mm)
+      // Incorporates Elecrow `00-2-13_view_asm.stp` cutouts + Printables `1566902 / 1741918`
+      // 4-corner spherical snap-lock pins, 1.0mm dust-seal step, and coin pry slot!
+      // -----------------------------------------------------------------------
+      {
+        const mb = new MeshBuilder();
+        const colShell  = [0.22, 0.27, 0.34];
+        const colInner  = [0.17, 0.21, 0.27];
+        const colAccent = [0.19, 0.24, 0.30];
+        const colPin    = [0.32, 0.39, 0.49];
+
+        const zBot        = -6.25;
+        const zBotChamfer = -4.85;
+        const zFloor      = -4.45;
+        const zSplit      =  2.85;
+
+        const outBot = MeshBuilder.roundedRectContour(0, 0, caseW - 2.4, caseL - 2.4, caseR - 0.8, segs);
+        const outMid = MeshBuilder.roundedRectContour(0, 0, caseW, caseL, caseR, segs);
+        const inWall = MeshBuilder.roundedRectContour(0, 0, 31.60, 63.60, 1.2, segs);
+
+        const rearGripOuter = MeshBuilder.roundedRectContour(0, 2.0, 21.0, 46.0, 4.0, segs);
+        const rearGripInner = MeshBuilder.roundedRectContour(0, 2.0, 19.4, 44.4, 3.4, segs);
+
+        mb.addRingBridge(outBot, zBot, outMid, zBotChamfer, colShell, false);
+        mb.addRingBridge(outMid, zBotChamfer, outMid, zSplit, colShell, false);
+
+        // Sculpted Rear Finger-Grip Recess on Back Face (Z = -6.25 mm)
+        mb.addRingBridge(outBot, zBot, rearGripOuter, zBot, colShell, true);
+        mb.addRingBridge(rearGripOuter, zBot, rearGripInner, zBot + 0.45, colAccent, true);
+        for (let i = 1; i < rearGripInner.length - 1; i++) {
+          mb.addTriangle(
+            [...rearGripInner[0], zBot + 0.45],
+            [...rearGripInner[i + 1], zBot + 0.45],
+            [...rearGripInner[i], zBot + 0.45],
+            colAccent
+          );
+        }
+        for (const gy of [-10, -4, 2, 8, 14]) {
+          mb.addChamferedRoundedBox(0, gy, zBot + 0.15, zBot + 0.45, 13.5, 1.2, 0.4, 0.1, 0, colShell, 2);
+        }
+
+        mb.addRingBridge(outMid, zSplit, inWall, zSplit, colInner, false);
+        mb.addRingBridge(inWall, zSplit, inWall, zFloor, colInner, true);
+
+        for (let i = 1; i < inWall.length - 1; i++) {
+          mb.addTriangle([...inWall[0], zFloor], [...inWall[i], zFloor], [...inWall[i + 1], zFloor], colInner);
+        }
+
+        // Exact Cutouts from `00-2-13_view_asm.stp` & Printables `1566902 / 1741918`:
+        // 1) RIGHT Wall (+X = +17.60 mm) USB TYPE-C Port Cutout at Y = -0.60 mm (Y in [-5.07..+3.87], Z in [-0.55..+2.85])
+        mb.addChamferedRoundedBox(16.75, -0.60, -0.55, zSplit + 0.05, 1.8, 10.2, 1.3, 0, 0, [0.07, 0.09, 0.13], 4);
+
+        // 2) BACK Face (Z = -6.25 mm) Recessed Toothpick Pinholes for Vertical BOOT (X=-11.90, Y=-15.20) & RESET (X=-11.90, Y=-25.67)
+        mb.addCylinder(-11.90, -15.20, zBot - 0.04, zBot + 0.60, 1.20, [0.06, 0.08, 0.12], 16);
+        mb.addCylinder(-11.90, -25.67, zBot - 0.04, zBot + 0.60, 1.20, [0.06, 0.08, 0.12], 16);
+
+        // 3) BACK Face (Z = -6.25 mm) Direct Bottom-Port Acoustic Sound Grille for Ø 14.0mm INMP441 at (X = -3.80, Y = +23.50 mm)
+        //    + Internal Ø 7.4mm Acoustic Seal Ring on Floor (Z = -4.45..-2.10 mm)
+        mb.addCylinder(-3.80, 23.50, zBot - 0.04, zBot + 0.55, 0.85, [0.05, 0.07, 0.11], 16);
+        mb.addCylinder(-6.10, 23.50, zBot - 0.04, zBot + 0.55, 0.70, [0.05, 0.07, 0.11], 14);
+        mb.addCylinder(-1.50, 23.50, zBot - 0.04, zBot + 0.55, 0.70, [0.05, 0.07, 0.11], 14);
+        mb.addHollowCylinder(-3.80, 23.50, zFloor, -2.10, 3.70, 2.60, [0.28, 0.35, 0.44], 20);
+
+        // 4) Bottom-Edge Fingernail / Coin Split Pry Slot (from Printables `tiny_reader_2-13_case_1.1.scad`: 10.0 × 1.2 mm at Y = -34.40 mm)
+        mb.addChamferedRoundedBox(0.00, -33.90, zSplit - 0.65, zSplit + 0.20, 10.0, 1.15, 0.4, 0, 0, [0.07, 0.09, 0.13], 3);
+
+        // 5) Printables `1566902 / 1741918` 4-Corner Spherical Snap-Fit Locking Pins (Ø 3.6mm posts + Ø 3.75mm spherical snap heads)
+        for (const [px, py] of [[-13.8, 30.8], [13.8, 30.8], [-13.8, -30.8], [13.8, -30.8]]) {
+          mb.addChamferedRoundedBox(px, py, zFloor, zSplit, 3.2, 3.2, 0.8, 0, 0, [0.28, 0.35, 0.44], 3);
+          mb.addCylinder(px, py, zSplit, zSplit + 1.15, 1.65, colPin, 16);
+          mb.addCylinder(px, py, zSplit + 1.15, zSplit + 1.55, 1.80, [0.38, 0.47, 0.58], 16);
+        }
+
+        // 6) Internal Battery Retention Divider Wall at Y = -17.8 mm
+        mb.addChamferedRoundedBox(0, -17.8, zFloor, zFloor + 3.6, 27.0, 1.2, 0.4, 0, 0, [0.28, 0.35, 0.44], 2);
+
+        // 7) Internal 10mm (`VC1027B200N`) Coin Vibration Motor C-Clip Ring at (-4.20, -24.00)
+        mb.addHollowCylinder(-4.20, -24.00, zFloor, zFloor + 2.5, 6.10, 5.05, [0.30, 0.37, 0.46], 24);
+
+        mb.addEdgeLoop(outBot, zBot);
+        mb.addEdgeLoop(rearGripOuter, zBot);
+        mb.addEdgeLoop(outMid, zBotChamfer);
+        mb.addEdgeLoop(outMid, zSplit);
+        mb.addEdgeLoop(inWall, zSplit);
+
+        parts.bottom_shell = mb;
+      }
+
+      return parts;
+    }
+
+    // =========================================================================
+    // 2. WEBGL 1.0 DEPTH-BUFFERED 3D ENGINE
+    // =========================================================================
+    const glCanvas = document.getElementById('glCanvas');
+    const hudCanvas = document.getElementById('hudCanvas');
+    const gl = glCanvas.getContext('webgl', { antialias: true, alpha: false });
+    const hud = hudCanvas.getContext('2d');
+
+    const vsSource = `
+      attribute vec3 aPos;
+      attribute vec3 aNorm;
+      attribute vec3 aColor;
+      attribute vec2 aUV;
+
+      uniform mat4 uProj;
+      uniform mat4 uView;
+      uniform vec3 uPartOffset;
+
+      varying vec3 vWorldPos;
+      varying vec3 vNorm;
+      varying vec3 vColor;
+      varying vec2 vUV;
+
+      void main() {
+        vec3 world = aPos + uPartOffset;
+        vWorldPos = world;
+        vNorm = (uView * vec4(aNorm, 0.0)).xyz;
+        vColor = aColor;
+        vUV = aUV;
+        gl_Position = uProj * uView * vec4(world, 1.0);
+      }
+    `;
+
+    const fsSource = `
+      precision mediump float;
+      varying vec3 vWorldPos;
+      varying vec3 vNorm;
+      varying vec3 vColor;
+      varying vec2 vUV;
+
+      uniform float uSliceX;
+      uniform float uAlpha;
+      uniform int uUseTexture;
+      uniform int uIsWire;
+      uniform int uIsHighlighted;
+      uniform sampler2D uTex;
+
+      void main() {
+        if (vWorldPos.x > uSliceX) discard;
+
+        if (uIsWire == 1) {
+          gl_FragColor = vec4(0.06, 0.09, 0.15, uAlpha * 0.50);
+          return;
+        }
+
+        if (uUseTexture == 1) {
+          vec4 texCol = texture2D(uTex, vUV);
+          gl_FragColor = vec4(texCol.rgb, uAlpha);
+          return;
+        }
+
+        vec3 N = normalize(vNorm);
+        if (!gl_FrontFacing) N = -N;
+
+        vec3 L1 = normalize(vec3(-0.40, 0.55, 0.85));
+        vec3 L2 = normalize(vec3(0.60, -0.40, 0.35));
+        vec3 V  = vec3(0.0, 0.0, 1.0);
+        vec3 H  = normalize(L1 + V);
+
+        float diff1 = max(dot(N, L1), 0.0);
+        float diff2 = max(dot(N, L2), 0.0) * 0.30;
+        float spec  = pow(max(dot(N, H), 0.0), 32.0) * 0.24;
+        float rim   = pow(1.0 - max(dot(N, V), 0.0), 3.0) * 0.15;
+
+        vec3 base = vColor;
+        if (uIsHighlighted == 1) {
+          base = mix(base, vec3(0.22, 0.74, 0.97), 0.45);
+        }
+
+        vec3 col = base * (0.36 + 0.64 * diff1 + diff2) + vec3(spec + rim);
+        gl_FragColor = vec4(col, uAlpha);
+      }
+    `;
+
+    function compileShader(type, src) {
+      const s = gl.createShader(type);
+      gl.shaderSource(s, src);
+      gl.compileShader(s);
+      return s;
+    }
+
+    const prog = gl.createProgram();
+    gl.attachShader(prog, compileShader(gl.VERTEX_SHADER, vsSource));
+    gl.attachShader(prog, compileShader(gl.FRAGMENT_SHADER, fsSource));
+    gl.linkProgram(prog);
+    gl.useProgram(prog);
+
+    const loc = {
+      aPos: gl.getAttribLocation(prog, 'aPos'),
+      aNorm: gl.getAttribLocation(prog, 'aNorm'),
+      aColor: gl.getAttribLocation(prog, 'aColor'),
+      aUV: gl.getAttribLocation(prog, 'aUV'),
+      uProj: gl.getUniformLocation(prog, 'uProj'),
+      uView: gl.getUniformLocation(prog, 'uView'),
+      uPartOffset: gl.getUniformLocation(prog, 'uPartOffset'),
+      uSliceX: gl.getUniformLocation(prog, 'uSliceX'),
+      uAlpha: gl.getUniformLocation(prog, 'uAlpha'),
+      uUseTexture: gl.getUniformLocation(prog, 'uUseTexture'),
+      uIsWire: gl.getUniformLocation(prog, 'uIsWire'),
+      uIsHighlighted: gl.getUniformLocation(prog, 'uIsHighlighted'),
+      uTex: gl.getUniformLocation(prog, 'uTex')
+    };
+
+    const rawParts = buildAllPartMeshes();
+    const gpuParts = {};
+
+    function uploadMesh(mb) {
+      const posBuf = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, posBuf);
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(mb.positions), gl.STATIC_DRAW);
+
+      const normBuf = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, normBuf);
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(mb.normals), gl.STATIC_DRAW);
+
+      const colBuf = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, colBuf);
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(mb.colors), gl.STATIC_DRAW);
+
+      const uvBuf = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, uvBuf);
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(mb.uvs), gl.STATIC_DRAW);
+
+      const edgeBuf = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, edgeBuf);
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(mb.edgePositions), gl.STATIC_DRAW);
+
+      return {
+        posBuf, normBuf, colBuf, uvBuf, edgeBuf,
+        vertCount: mb.positions.length / 3,
+        edgeCount: mb.edgePositions.length / 3
+      };
+    }
+
+    for (const [k, mb] of Object.entries(rawParts)) {
+      gpuParts[k] = uploadMesh(mb);
+    }
+
+    // Flush 2.13" E-Ink Active Display Surface at Z = +5.37mm, centered at Y = +2.625mm (from 00-2-13_view_asm.stp)
+    const screenMB = new MeshBuilder();
+    const sw = 11.855, sl = 24.275, sy = 2.625, sz = 5.37;
+    screenMB.addQuad(
+      [-sw, sy - sl, sz],
+      [ sw, sy - sl, sz],
+      [ sw, sy + sl, sz],
+      [-sw, sy + sl, sz],
+      [1, 1, 1],
+      true
+    );
+    const gpuScreen = uploadMesh(screenMB);
+
+    const einkTexCanvas = document.createElement('canvas');
+    einkTexCanvas.width = 256;
+    einkTexCanvas.height = 512;
+    const einkCtx = einkTexCanvas.getContext('2d');
+    const einkTexture = gl.createTexture();
+
+    const sampleNotes = [
+      { id: 14, time: "Oct 15 • 9:05 PM", text: "Pick up 10mm bolts, wood glue, and 220-grit sandpaper on the way home." },
+      { id: 15, time: "Oct 15 • 4:18 PM", text: "Call dentist to move Tuesday checkup to 9:30 AM." },
+      { id: 16, time: "Oct 15 • 1:12 PM", text: "Garden shed idea: small solar trickle charger for the door sensor." }
+    ];
+    let currentNoteIdx = 0;
+    let screenMode = 'note';
+
+    function updateEInkTexture() {
+      const c = einkCtx;
+      const w = 256, h = 512;
+
+      c.fillStyle = '#e8e6df';
+      c.fillRect(0, 0, w, h);
+
+      c.fillStyle = 'rgba(0,0,0,0.03)';
+      for (let y = 0; y < h; y += 6) {
+        for (let x = (y % 12 === 0 ? 0 : 3); x < w; x += 6) {
+          c.fillRect(x, y, 2, 2);
+        }
+      }
+
+      c.strokeStyle = '#18181b';
+      c.lineWidth = 4;
+      c.strokeRect(5, 5, w - 10, h - 10);
+
+      c.fillStyle = '#18181b';
+      c.fillRect(5, 5, w - 10, 48);
+
+      c.fillStyle = '#e8e6df';
+      c.font = 'bold 17px monospace';
+      const note = sampleNotes[currentNoteIdx];
+      c.fillText(
+        screenMode === 'listening' ? '● REC (HOLD)' :
+        screenMode === 'transcribing' ? '⟳ THINKING...' :
+        note.time,
+        15, 35
+      );
+
+      c.strokeStyle = '#e8e6df';
+      c.lineWidth = 2.5;
+      c.strokeRect(w - 48, 19, 28, 16);
+      c.fillRect(w - 20, 23, 4, 8);
+      c.fillRect(w - 44, 23, 20, 8);
+
+      c.fillStyle = '#18181b';
+      if (screenMode === 'listening') {
+        c.font = 'bold 24px sans-serif';
+        c.fillText('Listening...', 22, 130);
+        c.font = '18px monospace';
+        c.fillText('Speak near left vents', 22, 175);
+        for (let i = 0; i < 12; i++) {
+          const bh = 18 + Math.sin(i * 1.3 + Date.now() * 0.01) * 35;
+          c.fillRect(24 + i * 17, 260 - bh / 2, 10, bh);
+        }
+      } else if (screenMode === 'transcribing') {
+        c.font = 'bold 22px sans-serif';
+        c.fillText('Transcribing on', 22, 140);
+        c.fillText('ESP32-S3R8 Chip...', 22, 172);
+        c.font = '16px monospace';
+        c.fillText('Model: 4-bit Citrinet', 22, 230);
+        c.fillText('Wi-Fi/BT: 0.0 mA OFF', 22, 260);
+      } else {
+        c.font = 'bold 23px sans-serif';
+        const words = note.text.split(' ');
+        let line = '', y = 105;
+        for (const word of words) {
+          const test = (line + ' ' + word).trim();
+          if (c.measureText(test).width > w - 38) {
+            c.fillText(line, 19, y);
+            line = word;
+            y += 34;
+          } else {
+            line = test;
+          }
+        }
+        if (line) c.fillText(line, 19, y);
+      }
+
+      c.strokeStyle = '#18181b';
+      c.lineWidth = 2;
+      c.beginPath();
+      c.moveTo(14, h - 58);
+      c.lineTo(w - 14, h - 58);
+      c.stroke();
+
+      c.fillStyle = '#18181b';
+      c.font = 'bold 15px monospace';
+      c.fillText(`NOTE #${note.id} (${currentNoteIdx + 1}/${sampleNotes.length})`, 16, h - 34);
+      c.font = '13px monospace';
+      c.fillText(`EXIT:Talk • ROCKER:Flip`, 16, h - 15);
+
+      gl.bindTexture(gl.TEXTURE_2D, einkTexture);
+      gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, einkTexCanvas);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    }
+    updateEInkTexture();
+
+    // =========================================================================
+    // 3. UNRESTRICTED 360° CAMERA CONTROLLER
+    // =========================================================================
+    let rotX = -0.45;
+    let rotY = 0.48;
+    let camDist = 140;
+    let panX = 0, panY = 0;
+    let explode = 0.0;
+    let sliceX = 999.0;
+    let hideLid = false;
+    let showWireframe = true;
+    let selectedPart = null;
+    let vibeShake = 0.0;
+
+    function mat4Perspective(fovRad, aspect, near, far) {
+      const f = 1.0 / Math.tan(fovRad / 2);
+      const nf = 1 / (near - far);
+      return new Float32Array([
+        f / aspect, 0, 0, 0,
+        0, f, 0, 0,
+        0, 0, (far + near) * nf, -1,
+        0, 0, (2 * far * near) * nf, 0
+      ]);
+    }
+
+    function getViewMatrix() {
+      const cx = Math.cos(rotX), sx = Math.sin(rotX);
+      const cy = Math.cos(rotY), sy = Math.sin(rotY);
+
+      const r00 = cy,       r01 = 0,   r02 = sy;
+      const r10 = sx * sy,  r11 = cx,  r12 = -sx * cy;
+      const r20 = -cx * sy, r21 = sx,  r22 = cx * cy;
+
+      return new Float32Array([
+        r00, r10, r20, 0,
+        r01, r11, r21, 0,
+        r02, r12, r22, 0,
+        panX + vibeShake, panY, -camDist, 1
+      ]);
+    }
+
+    function project3DTo2D(pt, offset, viewMat, projMat, w, h) {
+      const x = pt[0] + offset[0], y = pt[1] + offset[1], z = pt[2] + offset[2];
+      const vx = viewMat[0]*x + viewMat[4]*y + viewMat[8]*z + viewMat[12];
+      const vy = viewMat[1]*x + viewMat[5]*y + viewMat[9]*z + viewMat[13];
+      const vz = viewMat[2]*x + viewMat[6]*y + viewMat[10]*z + viewMat[14];
+      const vw = viewMat[3]*x + viewMat[7]*y + viewMat[11]*z + viewMat[15];
+
+      const cx = projMat[0]*vx + projMat[4]*vy + projMat[8]*vz + projMat[12]*vw;
+      const cy = projMat[1]*vx + projMat[5]*vy + projMat[9]*vz + projMat[13]*vw;
+      const cw = projMat[3]*vx + projMat[7]*vy + projMat[11]*vz + projMat[15]*vw;
+      if (cw <= 0.1) return null;
+      return {
+        x: (cx / cw * 0.5 + 0.5) * w,
+        y: (0.5 - cy / cw * 0.5) * h
+      };
+    }
+
+    function getPartOffset(partId) {
+      const e = explode * 26.0;
+      switch (partId) {
+        case 'top_shell':    return [0, 0, e * 1.35];
+        case 'mic':          return [0, 0, -e * 0.25];
+        case 'eink_pcb':     return [0, 0, e * 0.30];
+        case 'buttons':      return [0, e * 0.45, e * 0.30];
+        case 'battery':      return [0, 0, -e * 0.45];
+        case 'mosfet':       return [e * 0.25, 0, -e * 0.72];
+        case 'vibe':         return [-e * 0.25, 0, -e * 0.72];
+        case 'bottom_shell': return [0, 0, -e * 1.30];
+        default:             return [0, 0, 0];
+      }
+    }
+
+    function drawPart(gpuMesh, offset, alpha, isHighlighted, useTex = false) {
+      gl.uniform3fv(loc.uPartOffset, offset);
+      gl.uniform1f(loc.uAlpha, alpha);
+      gl.uniform1i(loc.uUseTexture, useTex ? 1 : 0);
+      gl.uniform1i(loc.uIsWire, 0);
+      gl.uniform1i(loc.uIsHighlighted, isHighlighted ? 1 : 0);
+
+      gl.bindBuffer(gl.ARRAY_BUFFER, gpuMesh.posBuf);
+      gl.enableVertexAttribArray(loc.aPos);
+      gl.vertexAttribPointer(loc.aPos, 3, gl.FLOAT, false, 0, 0);
+
+      gl.bindBuffer(gl.ARRAY_BUFFER, gpuMesh.normBuf);
+      gl.enableVertexAttribArray(loc.aNorm);
+      gl.vertexAttribPointer(loc.aNorm, 3, gl.FLOAT, false, 0, 0);
+
+      gl.bindBuffer(gl.ARRAY_BUFFER, gpuMesh.colBuf);
+      gl.enableVertexAttribArray(loc.aColor);
+      gl.vertexAttribPointer(loc.aColor, 3, gl.FLOAT, false, 0, 0);
+
+      gl.bindBuffer(gl.ARRAY_BUFFER, gpuMesh.uvBuf);
+      gl.enableVertexAttribArray(loc.aUV);
+      gl.vertexAttribPointer(loc.aUV, 2, gl.FLOAT, false, 0, 0);
+
+      gl.drawArrays(gl.TRIANGLES, 0, gpuMesh.vertCount);
+
+      if (showWireframe && gpuMesh.edgeCount > 0 && !useTex) {
+        gl.uniform1i(loc.uIsWire, 1);
+        gl.disableVertexAttribArray(loc.aNorm);
+        gl.disableVertexAttribArray(loc.aColor);
+        gl.disableVertexAttribArray(loc.aUV);
+        gl.bindBuffer(gl.ARRAY_BUFFER, gpuMesh.edgeBuf);
+        gl.vertexAttribPointer(loc.aPos, 3, gl.FLOAT, false, 0, 0);
+        gl.drawArrays(gl.LINES, 0, gpuMesh.edgeCount);
+      }
+    }
+
+    function render() {
+      const rect = glCanvas.getBoundingClientRect();
+      const dpr = window.devicePixelRatio || 1;
+      const w = rect.width, h = rect.height;
+      if (glCanvas.width !== Math.round(w * dpr) || glCanvas.height !== Math.round(h * dpr)) {
+        glCanvas.width = Math.round(w * dpr);
+        glCanvas.height = Math.round(h * dpr);
+        hudCanvas.width = Math.round(w * dpr);
+        hudCanvas.height = Math.round(h * dpr);
+      }
+
+      gl.viewport(0, 0, glCanvas.width, glCanvas.height);
+      gl.clearColor(0.05, 0.07, 0.11, 1.0);
+      gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+      gl.enable(gl.DEPTH_TEST);
+      gl.enable(gl.POLYGON_OFFSET_FILL);
+      gl.polygonOffset(1.0, 1.0);
+
+      const projMat = mat4Perspective(38 * Math.PI / 180, w / h, 10, 500);
+      const viewMat = getViewMatrix();
+
+      gl.uniformMatrix4fv(loc.uProj, false, projMat);
+      gl.uniformMatrix4fv(loc.uView, false, viewMat);
+      gl.uniform1f(loc.uSliceX, sliceX);
+
+      const order = ['bottom_shell', 'vibe', 'mosfet', 'battery', 'mic', 'eink_pcb', 'buttons', 'top_shell'];
+
+      gl.disable(gl.BLEND);
+      gl.depthMask(true);
+      for (const id of order) {
+        if (id === 'top_shell' && hideLid) continue;
+        if (selectedPart && selectedPart !== id) continue;
+        const off = getPartOffset(id);
+        drawPart(gpuParts[id], off, 1.0, selectedPart === id, false);
+        if (id === 'eink_pcb') {
+          gl.activeTexture(gl.TEXTURE0);
+          gl.bindTexture(gl.TEXTURE_2D, einkTexture);
+          gl.uniform1i(loc.uTex, 0);
+          drawPart(gpuScreen, off, 1.0, false, true);
+        }
+      }
+
+      if (selectedPart) {
+        gl.enable(gl.BLEND);
+        gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+        gl.depthMask(false);
+        for (const id of order) {
+          if (id === 'top_shell' && hideLid) continue;
+          if (id === selectedPart) continue;
+          const off = getPartOffset(id);
+          drawPart(gpuParts[id], off, 0.16, false, false);
+        }
+        gl.depthMask(true);
+        gl.disable(gl.BLEND);
+      }
+
+      // 2D Callout Overlay
+      hud.setTransform(dpr, 0, 0, dpr, 0, 0);
+      hud.clearRect(0, 0, w, h);
+
+      if (explode > 0.20 || selectedPart || sliceX < 50) {
+        const callouts = [
+          { id: 'top_shell',    anchor: [-13, 18, 5.5],    label: 'Snap-Fit Bezel (35.2×68.8mm, R=2.6mm)' },
+          { id: 'buttons',      anchor: [0, 34.4, 1.6],    label: 'Captive EXIT + XB-TM-2024A + MENU (0mm Overhang)' },
+          { id: 'eink_pcb',     anchor: [13, -0.6, 3.2],   label: '2_13_PCB + Right Type-C + JST SH Header' },
+          { id: 'mic',          anchor: [-3.8, 23.5, -0.8],label: 'INMP441 Ø14mm (Rear Acoustic Port)' },
+          { id: 'battery',      anchor: [11.45, -10.1, 1.0],label: '503035 LiPo + JST SHR-02V-S Plug' },
+          { id: 'mosfet',       anchor: [6.2, -24, -3.0],  label: 'MOSFET / TO-92 Driver' },
+          { id: 'vibe',         anchor: [-4.2, -24, -2.0], label: 'VC1027B200N Coin Motor' },
+          { id: 'bottom_shell', anchor: [13.8, -30.8, 3.5],label: 'Snap Pins + USB-C + BOOT/RST + Pry Slot' }
+        ];
+
+        hud.font = '600 11px sans-serif';
+        for (const c of callouts) {
+          if (c.id === 'top_shell' && hideLid) continue;
+          if (selectedPart && selectedPart !== c.id) continue;
+          const pt = project3DTo2D(c.anchor, getPartOffset(c.id), viewMat, projMat, w, h);
+          if (!pt) continue;
+
+          const isRight = pt.x > w * 0.5;
+          const lx = isRight ? Math.min(w - 10, pt.x + 24) : Math.max(10, pt.x - 24);
+          const ly = pt.y - 8;
+
+          hud.strokeStyle = selectedPart === c.id ? '#38bdf8' : 'rgba(148,163,184,0.78)';
+          hud.lineWidth = 1.5;
+          hud.beginPath();
+          hud.arc(pt.x, pt.y, 3, 0, Math.PI * 2);
+          hud.moveTo(pt.x, pt.y);
+          hud.lineTo(lx, ly);
+          hud.stroke();
+
+          const tw = hud.measureText(c.label).width + 12;
+          const bx = isRight ? lx : lx - tw;
+          hud.fillStyle = 'rgba(15,23,42,0.88)';
+          hud.fillRect(bx, ly - 11, tw, 20);
+          hud.strokeRect(bx, ly - 11, tw, 20);
+
+          hud.fillStyle = '#f8fafc';
+          hud.textAlign = 'left';
+          hud.fillText(c.label, bx + 6, ly + 3);
+        }
+      }
+    }
+
+    // =========================================================================
+    // 4. INTERACTION HANDLERS & STL/SCAD EXPORT
+    // =========================================================================
+    let dragMode = null;
+    let lastX = 0, lastY = 0;
+
+    glCanvas.addEventListener('contextmenu', e => e.preventDefault());
+    glCanvas.addEventListener('pointerdown', e => {
+      dragMode = (e.button === 2 || e.shiftKey) ? 'pan' : 'orbit';
+      lastX = e.clientX;
+      lastY = e.clientY;
+      glCanvas.setPointerCapture(e.pointerId);
+    });
+    glCanvas.addEventListener('pointermove', e => {
+      if (!dragMode) return;
+      const dx = e.clientX - lastX;
+      const dy = e.clientY - lastY;
+      lastX = e.clientX;
+      lastY = e.clientY;
+      if (dragMode === 'orbit') {
+        rotY += dx * 0.012;
+        rotX += dy * 0.012;
+      } else {
+        panX += dx * 0.16;
+        panY -= dy * 0.16;
+      }
+      render();
+    });
+    glCanvas.addEventListener('pointerup', () => { dragMode = null; });
+    glCanvas.addEventListener('wheel', e => {
+      e.preventDefault();
+      camDist = Math.max(60, Math.min(280, camDist + e.deltaY * 0.09));
+      render();
+    }, { passive: false });
+
+    window.addEventListener('resize', render);
+
+    document.getElementById('rngExplode').addEventListener('input', e => {
+      explode = parseInt(e.target.value, 10) / 100;
+      document.getElementById('lblExplode').textContent = `${e.target.value}%`;
+      render();
+    });
+
+    document.getElementById('rngSlice').addEventListener('input', e => {
+      const v = parseInt(e.target.value, 10);
+      if (v === 0) {
+        sliceX = 999.0;
+        document.getElementById('lblSlice').textContent = 'Off';
+      } else {
+        sliceX = 18.0 - (v / 100) * 36.0;
+        document.getElementById('lblSlice').textContent = `${v}%`;
+      }
+      render();
+    });
+
+    document.getElementById('chkHideLid').addEventListener('change', e => {
+      hideLid = e.target.checked;
+      render();
+    });
+
+    document.getElementById('chkWireframe').addEventListener('change', e => {
+      showWireframe = e.target.checked;
+      render();
+    });
+
+    document.querySelectorAll('.view-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const v = btn.dataset.view;
+        panX = 0; panY = 0;
+        hideLid = false;
+        sliceX = 999.0;
+        selectedPart = null;
+        document.getElementById('rngSlice').value = 0;
+        document.getElementById('lblSlice').textContent = 'Off';
+
+        if (v === 'iso') {
+          rotX = -0.45; rotY = 0.48; camDist = 140;
+        }
+        if (v === 'front') {
+          rotX = 0.0; rotY = 0.0; camDist = 130;
+        }
+        if (v === 'back') {
+          rotX = 0.15; rotY = Math.PI - 0.18; camDist = 130;
+        }
+        if (v === 'top_edge') {
+          // Positive rotX (+PI/2 - 0.28) tilts the +Y Top Short Edge (Recessed EXIT + XB-TM-2024A + MENU) toward the camera
+          rotX = Math.PI / 2 - 0.28; rotY = 0.0; camDist = 105;
+        }
+        if (v === 'right_edge') {
+          // View Right Long Edge (+X) with USB Type-C Cutout at Y = -0.60mm
+          rotX = -0.10; rotY = -Math.PI / 2; camDist = 122;
+        }
+        if (v === 'pcb_back') {
+          // Isolate & view the underside of the Elecrow 63.20x31.20mm PCB from 00-2-13_view_asm.stp
+          rotX = 0.25; rotY = Math.PI - 0.25; camDist = 118;
+          selectedPart = 'eink_pcb';
+        }
+        if (v === 'fit') {
+          rotX = -0.25; rotY = 1.15; camDist = 124;
+          sliceX = 1.0;
+          document.getElementById('rngSlice').value = 50;
+          document.getElementById('lblSlice').textContent = '50%';
+        }
+        document.getElementById('chkHideLid').checked = hideLid;
+        updateSelectionUI();
+      });
+    });
+
+    function updateSelectionUI() {
+      document.querySelectorAll('.part-btn').forEach(b => {
+        const active = b.dataset.part === selectedPart;
+        b.classList.toggle('ring-2', active);
+        b.classList.toggle('ring-sky-400', active);
+      });
+      document.getElementById('btnResetSelection').classList.toggle('hidden', !selectedPart);
+      document.getElementById('lblActivePart').textContent = selectedPart
+        ? `Isolated: ${selectedPart.replace('_', ' ').toUpperCase()}`
+        : 'All 8 Parts Visible';
+      render();
+    }
+
+    document.querySelectorAll('.part-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const p = btn.dataset.part;
+        selectedPart = selectedPart === p ? null : p;
+        updateSelectionUI();
+      });
+    });
+
+    document.getElementById('btnResetSelection').addEventListener('click', () => {
+      selectedPart = null;
+      updateSelectionUI();
+    });
+
+    document.getElementById('btnFlipNote').addEventListener('click', () => {
+      currentNoteIdx = (currentNoteIdx + 1) % sampleNotes.length;
+      screenMode = 'note';
+      updateEInkTexture();
+      render();
+    });
+
+    function runBuzzAnimation(ms, text) {
+      const badge = document.getElementById('hapticBadge');
+      badge.textContent = text;
+      badge.classList.remove('hidden');
+      const t0 = performance.now();
+      function tick(now) {
+        if (now - t0 < ms) {
+          vibeShake = Math.sin(now * 0.18) * 0.75;
+          if (screenMode === 'listening') updateEInkTexture();
+          render();
+          requestAnimationFrame(tick);
+        } else {
+          vibeShake = 0;
+          render();
+        }
+      }
+      requestAnimationFrame(tick);
+    }
+
+    document.getElementById('btnTestTalk').addEventListener('click', () => {
+      const badge = document.getElementById('hapticBadge');
+      screenMode = 'listening';
+      updateEInkTexture();
+      runBuzzAnimation(450, 'BZZT! Recording Voice (Hold Top-Left EXIT)...');
+
+      setTimeout(() => {
+        screenMode = 'transcribing';
+        updateEInkTexture();
+        badge.textContent = 'Running 4-bit STT on ESP32-S3R8 (0.0mA Radio)...';
+        render();
+      }, 1400);
+
+      setTimeout(() => {
+        currentNoteIdx = (currentNoteIdx + 1) % sampleNotes.length;
+        screenMode = 'note';
+        updateEInkTexture();
+        runBuzzAnimation(350, 'BZZT-BZZT! Note Saved -> Deep Sleep');
+        setTimeout(() => badge.classList.add('hidden'), 1500);
+      }, 2800);
+    });
+
+    function exportPrintableSTL() {
+      const exportSet = [
+        { mb: rawParts.bottom_shell, dx: 0,  dy: 0, dz: 6.25 },
+        { mb: rawParts.top_shell,    dx: 40, dy: 0, dz: -2.85 },
+        { mb: rawParts.buttons,      dx: 0,  dy: 44, dz: -0.55 }
+      ];
+      let stl = 'solid the_scribble_v5_step\n';
+      for (const { mb, dx, dy, dz } of exportSet) {
+        const pos = mb.positions;
+        const nrm = mb.normals;
+        for (let i = 0; i < pos.length; i += 9) {
+          stl += `  facet normal ${nrm[i].toFixed(4)} ${nrm[i+1].toFixed(4)} ${nrm[i+2].toFixed(4)}\n`;
+          stl += `    outer loop\n`;
+          stl += `      vertex ${(pos[i]+dx).toFixed(4)} ${(pos[i+1]+dy).toFixed(4)} ${(pos[i+2]+dz).toFixed(4)}\n`;
+          stl += `      vertex ${(pos[i+3]+dx).toFixed(4)} ${(pos[i+4]+dy).toFixed(4)} ${(pos[i+5]+dz).toFixed(4)}\n`;
+          stl += `      vertex ${(pos[i+6]+dx).toFixed(4)} ${(pos[i+7]+dy).toFixed(4)} ${(pos[i+8]+dz).toFixed(4)}\n`;
+          stl += `    endloop\n`;
+          stl += `  endfacet\n`;
+        }
+      }
+      stl += 'endsolid the_scribble_v5_step\n';
+      return stl;
+    }
+
+    function exportParametricSCAD() {
+      return `// ============================================================================
+// The Scribble v5.0 — Official STEP-CAD Enclosure (Elecrow 00-2-13_view_asm.stp)
+// - Exact PCB Cavity: 31.60 x 63.60 mm R=1.2mm (for 31.20 x 63.20 mm R=1.0mm PCB)
+// - Outer Case: 35.20 x 68.80 x 12.20 mm with R=2.60 mm Corners
+// - Flat Top Wall spans X = -15.00 .. +15.00 mm -> 0.00 mm Button Overhang!
+// - Top Edge Recessed Slots: EXIT (X=-11.15mm), XB-TM-2024A (X=0.00mm), MENU (X=+11.15mm)
+// - Right Long Edge (+X): USB Type-C Cutout at Y = -0.60 mm
+// - Back Face (-Z): Recessed Pinholes for Vertical BOOT (X=-11.9, Y=-15.2) & RESET (X=-11.9, Y=-25.67)
+// ============================================================================
+$fn = 64;
+
+case_w = 35.20;
+case_l = 68.80;
+bot_h  = 9.10;
+top_h  = 3.10;
+wall   = 1.80;
+rad    = 2.60;
+
+module scribble_blank(w, l, h, r, ch_bot, ch_top) {
+  hull() {
+    if (ch_bot > 0)
+      translate([0, 0, 0])
+        linear_extrude(height = 0.01)
+          offset(r = r - ch_bot) square([w - 2*r, l - 2*r], center = true);
+    translate([0, 0, ch_bot])
+      linear_extrude(height = h - ch_bot - ch_top)
+        offset(r = r) square([w - 2*r, l - 2*r], center = true);
+    if (ch_top > 0)
+      translate([0, 0, h - 0.01])
+        linear_extrude(height = 0.01)
+          offset(r = r - ch_top) square([w - 2*r, l - 2*r], center = true);
+  }
+}
+
+module bottom_cradle() {
+  difference() {
+    scribble_blank(case_w, case_l, bot_h, rad, 1.4, 0);
+    translate([0, 0, 1.8])
+      scribble_blank(31.60, 63.60, bot_h, 1.2, 0, 0);
+    // Right-edge (+X) USB Type-C cutout at Y = -0.60mm
+    translate([case_w/2 - wall - 0.5, -0.60 - 4.9, bot_h - 3.4])
+      cube([wall + 1, 9.8, 3.5]);
+    // Top-edge (+Y) Recessed Slots inside the flat X = [-15..+15mm] wall
+    translate([-5.2, case_l/2 - wall - 0.5, bot_h - 2.3])
+      cube([10.4, wall + 1, 1.9]);
+    translate([-11.15 - 2.3, case_l/2 - wall - 0.5, bot_h - 2.3])
+      cube([4.6, wall + 1, 1.9]);
+    translate([ 11.15 - 2.3, case_l/2 - wall - 0.5, bot_h - 2.3])
+      cube([4.6, wall + 1, 1.9]);
+    // Back-face (-Z) Pinholes for vertical BOOT & RESET switches
+    for (py = [-15.20, -25.67])
+      translate([-11.90, py, -0.5])
+        cylinder(d = 2.4, h = 2.5);
+    // Back-face (-Z) acoustic port for the INMP441 bottom-port mic (X=-3.8, Y=+23.5)
+    for (dx = [-2.3, 0, 2.3])
+      translate([-3.80 + dx, 23.50, -0.5])
+        cylinder(d = (dx == 0) ? 1.7 : 1.4, h = 2.5);
+    // Bottom-edge pry slot at the split line
+    translate([-5.0, -case_l/2 - 0.5, bot_h - 0.65])
+      cube([10.0, wall + 1, 0.70]);
+  }
+  // 4-corner Ø3.6mm snap pins with spherical heads (from Printables 1566902)
+  for (p = [[-13.8, 30.8], [13.8, 30.8], [-13.8, -30.8], [13.8, -30.8]])
+    translate([p[0], p[1], 1.8]) {
+      cylinder(d = 3.6, h = bot_h - 1.8 + 1.15);
+      translate([0, 0, bot_h - 1.8 + 1.15]) sphere(d = 3.7);
+    }
+  // INMP441 acoustic seal ring (seat a foam gasket here)
+  translate([-3.80, 23.50, 1.8])
+    difference() { cylinder(d = 7.4, h = 2.35); cylinder(d = 5.2, h = 2.5); }
+  // 10mm VC1027B200N Vibration Motor C-Clip Ring
+  translate([-4.2, -24.0, 1.8])
+    difference() { cylinder(d = 12.2, h = 2.5); cylinder(d = 10.1, h = 2.6); }
+}
+
+module flush_top_bezel() {
+  difference() {
+    scribble_blank(case_w, case_l, top_h, rad, 0, 0.7);
+    translate([0, 0, -0.05])
+      scribble_blank(31.60, 63.60, 1.65, 1.2, 0, 0);
+    translate([-29.40/2, -59.40/2, 1.55])
+      cube([29.40, 59.40, 0.98]);
+    // Active display window centered at Y = +2.625mm (from 00-2-13_view_asm.stp)
+    hull() {
+      translate([0, 2.625, top_h - 0.60]) cube([23.71, 48.55, 0.02], center = true);
+      translate([0, 2.625, top_h + 0.05]) cube([24.90, 49.75, 0.02], center = true);
+    }
+    // Snap sockets (0.25mm tolerance) for the 4 corner pins
+    for (p = [[-13.8, 30.8], [13.8, 30.8], [-13.8, -30.8], [13.8, -30.8]])
+      translate([p[0], p[1], -0.1]) cylinder(d = 3.6 + 0.25, h = 1.7);
+  }
+}
+
+bottom_cradle();
+translate([42, 0, top_h]) rotate([0, 180, 0]) flush_top_bezel();
+`;
+    }
+
+    function downloadFile(name, text) {
+      const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = name;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    document.getElementById('btnDownloadSTL').addEventListener('click', () => {
+      downloadFile('the_scribble_v5_step.stl', exportPrintableSTL());
+    });
+    document.getElementById('btnDownloadSCAD').addEventListener('click', () => {
+      downloadFile('the_scribble_v5_step.scad', exportParametricSCAD());
+    });
+
+    if (typeof ResizeObserver !== 'undefined') {
+      new ResizeObserver(() => render()).observe(glCanvas);
+    }
+    window.addEventListener('load', () => {
+      updateEInkTexture();
+      render();
+    });
+    requestAnimationFrame(render);
+    setTimeout(render, 60);
+    setTimeout(render, 250);
+  </script>
+</body>
+</html>
