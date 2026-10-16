@@ -56,6 +56,8 @@ module motor_holder(){
       difference(){
         cylinder(d=12.2,h=2.5);
         translate([0,0,-0.1]) cylinder(d=10.4,h=2.7);
+        // Wire exit for LEADER LCM1027A2445F leaded motor.
+        translate([4.7,-2.0,-0.1]) cube([4,4,2.7]);
       }
 }
 module driver_lip(){
