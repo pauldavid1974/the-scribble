@@ -15,7 +15,7 @@ case_l = 82.0;
 case_r = 4.0;
 case_wall = 1.8;
 rear_h = 14.4;
-bezel_h = 4.3;
+bezel_h = 5.6;
 floor_t = 1.8;
 split_z = rear_h;
 front_z = rear_h + bezel_h;
@@ -115,10 +115,10 @@ module front_bezel(){
     difference(){
        translate([0,0,split_z]) roundbox(case_w,case_l,bezel_h,case_r);
        translate([0,0,split_z-0.10])
-          roundbox(board_w+board_clear,board_l+board_clear,1.85,1.2);
+          roundbox(32.0,66.6,4.35,1.2);
        translate([0,0,15.95]) roundbox(29.7,59.7,1.12,0.8);
        // Wider than 23.71x48.55 active display area, centered Y+2.625.
-       translate([0,2.625,16.97]) roundbox(24.9,49.75,2.0,0.6);
+       translate([0,2.625,16.97]) roundbox(24.9,49.75,3.5,0.6);
        for(x=[-snap_x,snap_x],y=[-snap_y,snap_y]) snap_socket(x,y);
        translate([case_w/2-2.9,-0.6-7.75,split_z-0.1]) cube([4.0,15.5,2.3]);
     }
