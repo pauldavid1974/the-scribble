@@ -41,12 +41,9 @@ CLAUDE.local.md
 .claude/settings.local.json
 .claude/review/
 
-# Large data / media (uncomment and adjust per project)
-# models/
-# data/
-# *.wav
-# *.mp3
-# *.zip
+# Large upstream CAD assemblies (fetchable via scripts/fetch_models.py)
+00-2-13_view_asm.stp
+
 
 # Editor / OS cruft
 .vscode/
