@@ -38,3 +38,16 @@ jobs:
             output/*.step
             output/*.json
           retention-days: 7
+      - name: Preserve exact imported vendor CAD for off-runner validation
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: scribble-source-step-models
+          path: |
+            hardware/specs/00-2-13_view_asm.stp
+            hardware/models/adafruit_1578_500mAh_battery.step
+            hardware/models/paulrenzi__bought_inmp441.step
+            hardware/models/LCM1027A2445F_1027_coin_vibration_motor.step
+            hardware/models/SOT-23.step
+            hardware/models/D_SOD-323.step
+          retention-days: 7
