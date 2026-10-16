@@ -1,4 +1,4 @@
-# v8 rotary-wheel clearance correction — source CAD evidence
+# v8.3 rotary-wheel edge-slot correction — source CAD evidence
 
 The v7 enclosure **could not operate the stock TM_2024A rotary switch** because it inserted a printed sliding control over a toothed wheel, and the wheel was recessed ~8 mm behind the case end. v8 replaces that arrangement instead of modeling a false switch.
 
@@ -16,7 +16,7 @@ The original Elecrow CrowPanel `00-2-13_view_asm.stp` imported as 240 source sol
 
 - Translate the entire board/whole official STEP assembly **+7.0 mm Y** toward the short end, not an individual simulated switch.
 - The rotary rim now extends to **Y39.981**, only **1.019 mm inside** the case's top Y41.0 boundary.
-- Cut a **14.2 mm wide recessed U-shaped finger scallop**, spanning **Y36.7..41.8**, and beginning at **Z12.2**. It passes through rear and bezel wherever their material overlaps, exposing the actual wheel's outer teeth from the top end and front lip.
+- Replaced the oversized front-bezel U-shaped scallop with a **14.2 mm wide × 3.9 mm high rounded capsule slot through the short end of the enclosure**. Its axis is at Z14.55; it extends inward 6.0 mm from Y42.0. A shallow tapered outer bevel widens the exposed mouth without opening the front-bezel roof. This keeps the green circuit board covered while exposing the real toothed rim from the top edge.
 - Remove the artificial center sliding/rocker cap **entirely**. The original switch remains fixed to its factory PCB.
 - Reposition the display/PCB pockets, active display window, USB opening and BOOT/RESET holes along with the board.
 - Refine the independent two button plungers: their resting inside face is at Y38.150, ~**0.112 mm** in front of real switch contact tips at Y38.038. Their outer faces stop at Y40.85 (0.15 mm inside the outside wall), preserving **0 mm top-edge overhang**.
@@ -32,3 +32,11 @@ The original Elecrow CrowPanel `00-2-13_view_asm.stp` imported as 240 source sol
 **Important:** Static CAD surface-point clearance does **not** establish dynamic wheel rotation, spring return, push-to-click stroke, finger comfort, full-surface mesh collision, or print tolerance. The official STEP represents the switch as a single solid, so the moving wheel's precise rotation range is **not modeled as a separate rigid component**. This remains a fit prototype requiring real control test. The driver PCB is still unselected, and the battery connector is out of the enclosure gate as instructed by owner.
 
 Original v5, v6 and v7 models have been preserved; use `hardware/the_scribble_v8_rotary_fit.scad` as the active printable CAD source.
+
+## v8.3 rounded end-slot verification (2026-10-16)
+
+- The user's Android screenshot showed a large square opening that exposed the underlying green PCB. The actual case aperture was redesigned as a rounded, **beveled side-facing edge slot**, with a continuous upper bezel roof.
+- OpenSCAD CGAL `rear`, `bezel`, and the two `side_caps` print-body STL meshes are watertight (1, 1 and 2 connected bodies respectively).
+- Static **actual Elecrow STEP-derived** rotary solid, left and right key-tip meshes versus both enclosure half-meshes: **zero VTK triangle contacts** for all six tests. Additional VTK inside-case checks: 25,000 points sampled from full Elecrow assembly, all 8,455 sampled rotary vertices, each key's 1,224 vertices, plus actual battery (96), microphone (1,284), motor (4,258) each had **zero points inside either case shell**.
+- Mobile HTML viewer was regenerated with those exact printable case meshes plus the original supplier-derived component meshes. A simulated Chromium/WebGL interaction test loaded 195,090 source-CAD-derived triangles, exercised touch-facing controls, and reported no JavaScript errors. This is not a live Android GPU guarantee.
+- Remaining physical verification: determine whether the **3.9-mm-high capsule at Y41** is comfortable for turning/pushing the actual switch, tolerance stack-up, and inspect a first 3D print. All of these are **unverified**.
