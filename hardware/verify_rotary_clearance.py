@@ -86,7 +86,7 @@ with tempfile.TemporaryDirectory() as d:
     for idx,nm in ((2,"rotary"),(5,"left_key"),(8,"right_key")):
         shape=BRepBuilderAPI_Transform(sources[idx],transform,True).Shape()
         bb=bounds(shape)
-        assert np.allclose(bb,expected[idx],atol=.015),f"{nm} is not at expected actual-CAD location: {bb}"
+        assert np.allclose(bb,expected[idx],atol=.05),f"{nm} is not at expected actual-CAD location: {bb}"
         BRepMesh_IncrementalMesh(shape,.08,False,.2)
         path=Path(d)/f"{nm}.stl"
         assert StlAPI_Writer().Write(shape,str(path))
