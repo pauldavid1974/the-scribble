@@ -1,5 +1,7 @@
 # The Scribble
 
+> **Enclosure status (2026-10-16):** v6 is an unmerged fit prototype in [PR #3](https://github.com/pauldavid1974/the-scribble/pull/3). The [3D viewer](hardware/case_model_viewer.html) now previews the **v6** OpenSCAD-derived case; the v5 enclosure and STL below are archived reference assets, **not the active prototype**. Real-part fit and print tests remain outstanding.
+
 > **Distraction-Free Voice-to-Text E-Paper Handheld Recorder**
 
 The Scribble is an open hardware, pocketable voice note capture device designed for immediate, tactile thought capture. It pairs an ultra-low-power 2.13" E-Paper display with an ESP32-S3 microcontroller, I2S digital MEMS microphone, haptic vibration engine, and rechargeable LiPo battery inside a custom 3D printed snap-fit enclosure.
@@ -21,7 +23,7 @@ Spoken thoughts are captured to internal flash memory as clean Markdown (`.md`) 
 
 ---
 
-## Mechanical Enclosure (v5.0)
+## Archived Mechanical Enclosure (v5.0)
 
 The enclosure is designed from Elecrow's official `00-2-13_view_asm.stp` CAD assembly and Eagle PCB schematics.
 
@@ -77,3 +79,19 @@ Open [`hardware/case_model_viewer.html`](file:///hardware/case_model_viewer.html
 - **Explode Stack Slider:** See internal component layering (battery, PCB, mic, haptic motor, and bezel).
 - **Cross-Section Cutaway:** Inspect internal wall clearances and snap-pin mating.
 - **Haptic Test:** Hold the "Talk" button in the viewer to test real-time vibration simulation.
+
+
+## Interactive v6 CAD Viewer (Fit Prototype)
+
+Open [`hardware/case_model_viewer.html`](hardware/case_model_viewer.html) in Chrome or Edge. It is a single self-contained HTML file (including the preview meshes) and works offline once downloaded. It renders the **v6** rear shell, bezel, and top controls from the OpenSCAD prototype meshes, plus explicitly simplified component clearance envelopes. The viewer supports touch/mouse orbit and zoom, presets for display/rear/USB/top views, exploded assembly, component toggles, and a shell cutaway.
+
+**Do not use the viewer's lightweight display meshes for printing.** The authoritative printable source is [`hardware/the_scribble_v6_fit.scad`](hardware/the_scribble_v6_fit.scad). Install OpenSCAD, then generate precise STL parts from that source:
+
+```bash
+node scripts/generate_stl.js --part print_layout
+node scripts/generate_stl.js --part rear
+node scripts/generate_stl.js --part bezel
+node scripts/generate_stl.js --part side_caps
+```
+
+Generated files are saved in `output/` (or supply `--output <file>`). Review the [v6 fit audit](hardware/V6_ENCLOSURE_FIT_AUDIT.md) and [issue #2](https://github.com/pauldavid1974/the-scribble/issues/2) before test printing or installing a LiPo.
