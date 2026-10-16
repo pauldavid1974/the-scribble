@@ -29,6 +29,33 @@ jobs:
       - name: Assemble imported STEP solids and run true B-rep interference checks
         timeout-minutes: 10
         run: python3 hardware/assemble_real_step.py
+      - name: Install OpenSCAD and triangulated-mesh validator
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends openscad
+          python3 -m pip install --disable-pip-version-check 'trimesh>=4,<5'
+      - name: Render and inspect authoritative v7 case solids
+        run: |
+          for part in rear bezel side_caps print_layout; do
+            openscad -o "output/the_scribble_v7_${part}.stl" -D "part=\"$part\"" hardware/the_scribble_v7_real_fit.scad
+          done
+          python3 - <<'PY'
+          from pathlib import Path
+          import trimesh
+          for part, expected in [('rear',1),('bezel',1),('side_caps',3),('print_layout',2)]:
+              f=Path(f'output/the_scribble_v7_{part}.stl')
+              m=trimesh.load(str(f), force='mesh')
+              comps=m.split()
+              print('SLICER',part,'watertight',m.is_watertight,'parts',len(comps),'bounds',m.bounds.tolist())
+              assert m.is_watertight and len(comps)==expected, part
+          PY
+      - name: Save printable v7 mesh files
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: scribble-v7-printable-meshes
+          path: output/the_scribble_v7_*.stl
+          retention-days: 7
       - name: Save actual assembly STEP and reports
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
