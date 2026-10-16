@@ -72,14 +72,6 @@ the-scribble/
 
 ---
 
-## Interactive 3D Model Inspection
-
-Open [`hardware/case_model_viewer.html`](file:///hardware/case_model_viewer.html) in any modern browser for:
-- 360° orbit, pan, and zoom controls.
-- **Explode Stack Slider:** See internal component layering (battery, PCB, mic, haptic motor, and bezel).
-- **Cross-Section Cutaway:** Inspect internal wall clearances and snap-pin mating.
-- **Haptic Test:** Hold the "Talk" button in the viewer to test real-time vibration simulation.
-
 
 ## Interactive v6 CAD Viewer (Fit Prototype)
 
