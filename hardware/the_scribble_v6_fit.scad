@@ -84,7 +84,7 @@ module rear_shell(){
             driver_lip();
         }
         // Cut the *actual shell* for a molded USB-C plug collar.
-        translate([case_w/2-2.9,-0.6-6.7,5.1]) cube([4.0,13.4,4.2]);
+        translate([case_w/2-2.9,-0.6-7.75,4.6]) cube([4.0,15.5,4.5]);
         // Genuine BOOT and RESET access holes through rear floor.
         for(py=[-15.2,-25.67])
           translate([-11.9,py,-0.1]) cylinder(d=2.4,h=2.1);
@@ -114,7 +114,7 @@ module front_bezel(){
        // Wider than 23.71x48.55 active display area, centered Y+2.625.
        translate([0,2.625,11.67]) roundbox(24.9,49.75,2.0,0.6);
        for(x=[-snap_x,snap_x],y=[-snap_y,snap_y]) snap_socket(x,y);
-       translate([case_w/2-2.9,-0.6-6.7,split_z-0.1]) cube([4.0,13.4,1.5]);
+       translate([case_w/2-2.9,-0.6-7.75,split_z-0.1]) cube([4.0,15.5,2.3]);
     }
 }
 module side_button_cap(x){
