@@ -20,7 +20,7 @@
 - Rear floor thickness **1.8 mm**; upper/lower split at z9.1. Board supports have full load path to shell sides.
 - Spherical snap pins and matching undercut pockets outside the rectangular PCB envelope, with approx **0.75 mm** nearest head-to-PCB lateral clearance. Snap heads require physical PETG flex verification; avoid brittle material.
 - USB-C plug-access notch spans both halves and provides 15.5 mm width by 6.7 mm height; depth/real cable collar needs fit confirmation.
-- Rear BOOT/RESET tool holes and triple-mic acoustic holes genuinely cut through shell; rear gasket seat is a *real* raised ring.
+- Rear BOOT/RESET tool holes and single central microphone acoustic through-bore genuinely cut through shell; rear gasket seat is a *real* raised ring.
 - Non-overlapping floor zones for battery, mic, wired Ø10 motor, and a nominal driver PCB. The motor holder now has a wire-exit notch.
 - Three separate trial button plunger/rocker pieces, **not yet qualified for switch feel, electrical contact or ±2.3 mm rocker stroke**. They are prototypes to fit-test, not claims of finalized switch actuation.
 
