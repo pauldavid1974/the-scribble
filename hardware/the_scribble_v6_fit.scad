@@ -41,8 +41,13 @@ module snap_tower(x,y) {
 }
 module board_supports(){
     // Four board-edge tabs mechanically joined to side walls.
-    for(xsign=[-1,1], y=[-25,25])
-      translate([xsign*18.15,y,7.2]) cube([7.5,3.2,3.8],center=true);
+    for(xsign=[-1,1], y=[-25,25]) {
+      // Each rail rises from a floor-anchored, sloped printable buttress.
+      hull(){
+        translate([xsign*20.1,y,2.05]) cube([2.4,3.2,0.5],center=true);
+        translate([xsign*18.15,y,8.8]) cube([7.5,3.2,0.6],center=true);
+      }
+    }
 }
 module acoustic_seal_seat(){
     translate([mic_xy[0],mic_xy[1],floor_t-0.2])
