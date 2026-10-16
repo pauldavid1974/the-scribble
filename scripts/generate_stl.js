@@ -1,10 +1,10 @@
-// Generate the printable v7 meshes from the authoritative OpenSCAD solid.
+// Generate the printable v8 meshes from the authoritative OpenSCAD solid.
 // No longer serializes decorative WebGL preview meshes into a false "STL".
 const fs = require('node:fs');
 const path = require('node:path');
 const { spawnSync } = require('node:child_process');
 const root = path.resolve(__dirname, '..');
-const source = path.join(root, 'hardware', 'the_scribble_v7_real_fit.scad');
+const source = path.join(root, 'hardware', 'the_scribble_v8_rotary_fit.scad');
 const options = process.argv.slice(2);
 function value(flag) {
   const idx = options.indexOf(flag);
@@ -15,7 +15,7 @@ function value(flag) {
 const part = value('--part') || 'print_layout';
 const allowed = new Set(['rear', 'bezel', 'side_caps', 'print_layout']);
 if (!allowed.has(part)) throw Error('Unsupported part: ' + part);
-const target = path.resolve(value('--output') || path.join(root, 'output', 'the_scribble_v7_' + part + '.stl'));
+const target = path.resolve(value('--output') || path.join(root, 'output', 'the_scribble_v8_' + part + '.stl'));
 const windowsOpenSCAD = path.join(process.env.ProgramFiles || 'C:\\Program Files', 'OpenSCAD', 'openscad.exe');
 const tool = process.env.OPENSCAD_BIN || (process.platform === 'win32' && fs.existsSync(windowsOpenSCAD) ? windowsOpenSCAD : 'openscad');
 fs.mkdirSync(path.dirname(target), { recursive: true });
@@ -24,6 +24,6 @@ if (run.error) {
   throw Error('Cannot start OpenSCAD (' + tool + '): ' + run.error.message + '. Install OpenSCAD or set OPENSCAD_BIN.');
 }
 if (run.status !== 0 || !fs.existsSync(target) || fs.statSync(target).size === 0) {
-  throw Error('OpenSCAD did not create a usable v7 ' + part + ' STL:\\n' + (run.stderr || 'No output'));
+  throw Error('OpenSCAD did not create a usable v8 ' + part + ' STL:\\n' + (run.stderr || 'No output'));
 }
-console.log('Generated v7 ' + part + ': ' + target + ' (' + fs.statSync(target).size + ' bytes)');
+console.log('Generated v8 ' + part + ': ' + target + ' (' + fs.statSync(target).size + ' bytes)');
