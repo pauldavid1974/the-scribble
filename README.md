@@ -1,12 +1,21 @@
 # The Scribble
 
-> **Enclosure status (2026-10-16):** v6 is an unmerged fit prototype in [PR #3](https://github.com/pauldavid1974/the-scribble/pull/3). The [3D viewer](hardware/case_model_viewer.html) now previews the **v6** OpenSCAD-derived case; the v5 enclosure and STL below are archived reference assets, **not the active prototype**. Real-part fit and print tests remain outstanding.
+> **Enclosure status (2026-10-16):** **v7** is now the active unmerged fit prototype in [PR #3](https://github.com/pauldavid1974/the-scribble/pull/3). It uses **actual source STEP solids** to resolve board/battery and battery/motor interferences. See [v7 fit evidence](hardware/V7_REAL_CAD_FIT_REPORT.md) and [download the real STEP assembly](https://github.com/pauldavid1974/the-scribble/actions/runs/38950129792). The existing HTML 3D viewer still depicts **v6**, so **do not use it to assess the revised v7 packaging**. Physical fit, detailed snap/controls, and full shell interference checks are still required.
 
 > **Distraction-Free Voice-to-Text E-Paper Handheld Recorder**
 
 The Scribble is an open hardware, pocketable voice note capture device designed for immediate, tactile thought capture. It pairs an ultra-low-power 2.13" E-Paper display with an ESP32-S3 microcontroller, I2S digital MEMS microphone, haptic vibration engine, and rechargeable LiPo battery inside a custom 3D printed snap-fit enclosure.
 
 Spoken thoughts are captured to internal flash memory as clean Markdown (`.md`) files and synced to a Windows PC over standard USB-C.
+
+---
+
+
+## Active v7 Actual-CAD Fit Prototype
+
+The authoritative new mechanical source is [`hardware/the_scribble_v7_real_fit.scad`](hardware/the_scribble_v7_real_fit.scad), designed after import of the **real Elecrow board, Adafruit cell, 16×14×2.02 mm INMP441 STEP, and named 1027 motor STEP**. The adjusted outer dimensions are **46×82×20 mm**. The complete assembled STEP, generated from real component solids, is attached to the [Real CAD Source Audit Actions run](https://github.com/pauldavid1974/the-scribble/actions/runs/38950129792). See the [measured fitting report](hardware/V7_REAL_CAD_FIT_REPORT.md).
+
+Generate actual printable prototype meshes with `node scripts/generate_stl.js --part rear` (or `bezel` / `side_caps` / `print_layout`). This tool now reads **v7** OpenSCAD directly. **The HTML viewer remains an older v6 inspection reference, not the verified active design**. The part-pair clearance evidence does not replace a full case-body CAD intersection and physical assembly test.
 
 ---
 
