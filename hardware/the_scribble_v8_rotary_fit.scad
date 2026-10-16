@@ -1,4 +1,4 @@
-// The Scribble v8 ROTARY-SWITCH REAL-CAD FIT PROTOTYPE -- mechanical clearance revision.
+// The Scribble v8.3 BEVELED EDGE-SLOT REAL-CAD FIT PROTOTYPE -- mechanical clearance revision.
 // Dimensions in mm; print-fit prototype, NOT production-certified.
 // Part selector: print_layout | rear | bezel | side_caps | fit_mockup
 // Authoritative solid source for prototype STL generation; no decorative fake holes.
@@ -79,9 +79,29 @@ module driver_lip(){
 // Genuine CrowPanel TM_2024A toothed dial (official STEP solid, not a proxy):
 // original X=-6.582..6.582 Y=23.988..32.981 Z=13.152..15.952;
 // whole-board +7 mm move puts wheel face near top edge Y39.981.
-module rotary_thumb_notch(){
-  translate([-7.10,36.7,12.20]) cube([14.20,case_l/2-36.7+0.8,front_z-12.2+0.5]);
+// Measured Elecrow TM_2024A wheel: X=-6.582..6.582, Z=13.152..15.952,
+// outer toothed rim to case Y39.981. Access the wheel from the case SHORT EDGE,
+// keeping the front-bezel roof intact so the PCB does not show through.
+module rotary_slot_profile(r){
+  hull(){
+    translate([-5.15,0]) circle(r=r,$fn=48);
+    translate([ 5.15,0]) circle(r=r,$fn=48);
+  }
 }
+module rotary_thumb_notch(){
+  // Continuous printable rounded edge-slot: 14.2mm width, 3.9mm height,
+  // 6mm mouth depth; ~0.55mm wheel clearance each vertical side at rest.
+  translate([0,42.0,14.55]) rotate([90,0,0])
+    linear_extrude(height=6.0) rotary_slot_profile(1.95);
+  // External sloped bevel removes sharp corners without opening the bezel roof.
+  hull(){
+    translate([0,40.85,14.55]) rotate([90,0,0])
+      linear_extrude(height=0.04) rotary_slot_profile(1.95);
+    translate([0,41.52,14.55]) rotate([90,0,0])
+      linear_extrude(height=0.04) rotary_slot_profile(2.28);
+  }
+}
+// Actual MENU/EXIT button tips are kept on independent channels, not wheel proxies.
 module key_stem_openings(){
   for(x=[-11.15,11.15]) translate([x-1.68,38.9,12.6]) cube([3.36,3.0,2.1]);
 }
